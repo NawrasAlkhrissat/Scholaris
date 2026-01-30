@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | <%= student.name %>
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/student.css">
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+            <main class="main-content">
+                <% if(role === 'admin'){ %>
+                <a href="/school/student" class="back-link">
+                    <span>&larr;</span> Back to All Students
+                </a>
+                    <% }else{  %>
+                <a href="/school/classStudents/<%= student.currentClass._id %>" class="back-link">
+                    <span>&larr;</span> Back to All Students
+                </a>
+                <% } %>
+
+                <div class="profile-grid">
+
+                    <div class="left-column">
+
+                        <div class="info-card student-header">
+                            <img src="https://ui-avatars.com/api/?name=<%= student.name %>&background=3498DB&color=fff&size=200"
+                                alt="Student Avatar" class="student-avatar">
+                            <div class="student-title">
+                                <h1>
+                                    <%= student.name %>
+                                </h1>
+                                <div class="student-meta">
+                                    <span class="class-badge">
+                                        <%= student.currentClass.className %>
+                                    </span>
+                                    <div class="meta-item"><span>👤</span>
+                                        <%= student.gender %>
+                                    </div>
+                                </div>
+                            </div>
+                            <% if(role === 'admin'){ %>
+                            <a href="/school/student/edit/<%= student._id  %>">
+                                <button class="btn-edit-profile">Edit Profile</button>
+                            </a>
+                            <% } %>
+                        </div>
+
+                        <div class="info-card">
+                            <h3 class="card-title"><span>📋</span> Personal Details</h3>
+                            <div class="data-grid">
+                                <div class="data-item">
+                                    <span class="data-label">Date of Birth</span>
+                                    <span class="data-value">
+                                        <%= new Date(student.dateOfBirth).toLocaleDateString('en-GB') %>
+                                    </span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">National ID</span>
+                                    <span class="data-value">
+                                        <%= student.nationalId %>
+                                    </span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Address</span>
+                                    <span class="data-value">📍 <%= student.address %></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card parent-card">
+                            <h3 class="card-title"><span>👨‍👩‍👦</span> Guardian Contacts</h3>
+                            <div class="data-grid">
+                                <div class="data-item">
+                                    <span class="data-label">Guardian Name</span>
+                                    <span class="data-value">
+                                        <%= student.parentContacts.name %>
+                                    </span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Phone Number</span>
+                                    <span class="data-value">
+                                        <a href="tel:<%= student.parentContacts.phone %>" class="contact-link">
+                                            <%= student.parentContacts.phone %>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Email Address</span>
+                                    <span class="data-value">
+                                        <a href="mailto:<%= student.parentContacts.email %>" class="contact-link">
+                                            <%= student.parentContacts.email %>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-column">
+
+                        <div class="info-card records-card">
+                            <h3 class="card-title"><span>📂</span> Student Records</h3>
+                            <p class="card-subtitle">Access detailed academic and behavioral reports.</p>
+
+                            <div class="action-list">
+
+                                <a href="/teacher/studentGrades/<%= student._id %>" class="action-btn">
+                                    <div class="btn-left">
+                                        <span class="btn-icon">📊</span>
+                                        <span>View Grades</span>
+                                    </div>
+                                    <span class="arrow-icon">&rarr;</span>
+                                </a>
+
+                                <a href="/teacher/studentAttendance/<%= student._id %>" class="action-btn">
+                                    <div class="btn-left">
+                                        <span class="btn-icon">📅</span>
+                                        <span>View Attendance Details</span>
+                                    </div>
+                                    <span class="arrow-icon">&rarr;</span>
+                                </a>
+
+                                <a href="/teacher/studentRemarks/<%= student._id %>" class="action-btn">
+                                    <div class="btn-left">
+                                        <span class="btn-icon">📝</span>
+                                        <span>View Remarks</span>
+                                    </div>
+                                    <span class="arrow-icon">&rarr;</span>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <% if(action && action.includes('updatedStudent')){ %>
+                <script>
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: "Student details updated successfully.",
+                    });
+                </script>
+            <% } %>
+</body>
+
+</html>

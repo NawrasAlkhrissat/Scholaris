@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remarks | <%= student.name %>
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/studentRemarks.css">
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+           <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                        <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span><%= role == 'admin' ? 'All Subjects' : 'My Subjects'  %></span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+
+                <a href="/school/student/<%= student._id %>" class="back-link">
+                    <span>&larr;</span> Back to Profile
+                </a>
+
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>Teacher Remarks</h1>
+                        <p>Feedback and behavioral notes for <strong>
+                                <%= student.name %>
+                            </strong></p>
+                    </div>
+                </header>
+
+                <div class="remarks-grid">
+                    <% if (studentRemarks.length> 0) { %>
+
+                        <% studentRemarks.forEach(remark=> { %>
+                            <div class="remark-card">
+
+                                <div class="card-top">
+                                    <span class="subject-badge">
+                                        <%= remark.subject.subjectName %>
+                                    </span>
+                                    <span class="remark-date">
+                                        <%= new Date(remark.date).toLocaleDateString('en-GB', { day: 'numeric' ,
+                                            month: 'short' , year: 'numeric' }) %>
+                                    </span>
+                                </div>
+
+                                <div class="card-body">
+                                    <span class="quote-icon">❝</span>
+                                    <p class="remark-text">
+                                        <%= remark.remark %>
+                                    </p>
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="teacher-icon">
+                                        <%= remark.teacher.firstName.charAt(0) %>
+                                        <%= remark.teacher.lastName.charAt(0) %>
+                                    </div>
+                                    <div class="teacher-info">
+                                        <span class="teacher-name">
+                                            <%= remark.teacher.firstName %>
+                                            <%= remark.teacher.lastName %>
+                                        </span>
+                                        <span class="teacher-label">Teacher</span>
+                                    </div>
+                                </div>
+                                <% if(role == 'admin' || userId == remark.teacher._id.toString()){ %>
+                                <form action="/teacher/studentRemarks/<%= remark._id %>?_method=DELETE" method="post">
+                                    <button type="submit" class="delete-button">Delete</button>
+                                </form>
+                                <% } %>
+                            </div>
+                            <% }) %>
+
+                                <% } else { %>
+                                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #999;">
+                                        <span style="font-size: 3rem; display: block; margin-bottom: 10px;">📝</span>
+                                        <p>No remarks recorded for this student yet.</p>
+                                    </div>
+                                    <% } %>
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <% if(action && action.includes('remarkDeleted')){ %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Remark Deleted',
+                text: 'The remark has been deleted successfully.',
+                confirmButtonText: 'OK'
+            })
+        </script>
+        <% } %>
+        
+
+</body>
+
+</html>

@@ -1,0 +1,421 @@
+  /* --- 1. Global Variables --- */
+        :root {
+            --primary-color: #2C3E50;
+            --accent-color: #3498DB;
+            --bg-light: #F4F6F9;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-gray: #666;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar & Sidebar --- */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            /* ظل خفيف */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            /* تثبيت الشريط عند التمرير */
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* --- تصميم الشعار (يسار) --- */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .nav-logo {
+            height: 45px;
+            /* ارتفاع ثابت */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- تصميم الروابط (وسط) --- */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- تصميم الأزرار (يمين) --- */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            /* المسافة بين زر الدخول وزر التسجيل */
+            align-items: center;
+        }
+
+        /* زر تسجيل الدخول (داكن) */
+        .btn-login {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #1a252f;
+            /* درجة أغمق قليلاً */
+            transform: translateY(-2px);
+        }
+
+        /* زر إنشاء حساب (سماوي - مميز) */
+        .btn-signup {
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+            /* ظل لتمييز الزر */
+        }
+
+        .btn-signup:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* --- 2. Layout Structure --- */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid #e1e1e1;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: calc(100vh - 70px);
+            position: sticky;
+            top: 70px;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background-color: #EBF5FB;
+            color: var(--accent-color);
+        }
+
+        .sidebar-link span {
+            margin-left: 10px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .header-title p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* --- Message Card Styles --- */
+        .messages-container {
+            display: grid;
+            gap: 25px;
+        }
+
+        .message-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+            transition: 0.3s;
+        }
+
+        .message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Sender Info */
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .sender-info h3 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .sender-email {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Message Blocks */
+        .conversation-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .msg-bubble {
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .original-msg {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            border: 1px solid #eee;
+        }
+
+        .original-msg::before {
+            content: 'Incoming Message:';
+            display: block;
+            font-size: 0.75rem;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .reply-msg {
+            background-color: #f0fdf4;
+            /* Light Green */
+            color: var(--text-dark);
+            border-left: 4px solid var(--success-color);
+            margin-left: 20px;
+        }
+
+        .reply-msg::before {
+            content: 'Adminstration Reply:';
+            display: block;
+            font-size: .90rem;
+            color: var(--success-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Reply Action */
+        .action-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-reply-toggle {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-reply-toggle:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Reply Form */
+        .reply-form-container {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            background-color: #fafafa;
+        }
+
+        .reply-textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            background-color: #fff;
+        }
+
+        .btn-send-reply {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-send-reply:hover {
+            background-color: var(--accent-color);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        @media (max-width: 900px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+        }

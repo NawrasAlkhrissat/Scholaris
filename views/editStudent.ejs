@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/editStudent.css">
+
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+        <div class="dashboard-container">
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+
+                <div class="form-container-centered">
+
+                    <div class="page-header">
+                        <div>
+                            <a href="/school/student/<%= student._id %>" class="back-link">
+                                <span>&larr;</span> Back to Students
+                            </a>
+                            <h1 style="margin-top: 10px; font-size: 1.8rem; color: var(--primary-color);">Edit Student
+                            </h1>
+                        </div>
+
+                        <form action="/school/student/<%= student._id %>?_method=DELETE" method="POST">
+                            <button type="submit" class="btn-delete"
+                                onclick="return confirm('Are you sure you want to delete this student permanently?')">
+                                🗑️ Delete Student
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <form action="/school/student/<%= student._id %>?_method=PUT" method="POST">
+
+                            <div class="section-header">Student Information</div>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Full Name</label>
+                                    <input type="text" name="name" class="form-input" value="<%= student.name %>"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <input type="date" name="dateOfBirth" class="form-input"
+                                        value="<%= student.dateOfBirth instanceof Date ? student.dateOfBirth.toISOString().split('T')[0] : student.dateOfBirth %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <select name="gender" class="form-select">
+                                        <option value="male" <%=student.gender==='male' ? 'selected' : '' %>>Male
+                                        </option>
+                                        <option value="female" <%=student.gender==='female' ? 'selected' : '' %>>Female
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>National ID</label>
+                                    <input type="number" name="nationalId" class="form-input"
+                                        value="<%= student.nationalId %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Current Class</label>
+                                    <select name="currentClass" class="form-select">
+                                        <option value="" disabled>Select Class</option>
+                                        <% for (let cls of classes) { %>
+                                            <option value="<%= cls._id %>" <%=(student.currentClass &&
+                                                student.currentClass.toString()===cls._id.toString()) ? 'selected' : ''
+                                                %>>
+                                                <%= cls.className %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="section-header">Parent / Guardian Information</div>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Parent Name</label>
+                                    <input type="text" name="parentName" class="form-input"
+                                        value="<%= student.parentContacts.name %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Parent Phone</label>
+                                    <input type="tel" name="parentPhone" class="form-input"
+                                        value="<%= student.parentContacts.phone %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Parent Email</label>
+                                    <input type="email" name="parentEmail" class="form-input"
+                                        value="<%= student.parentContacts.email %>">
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>Home Address</label>
+                                    <input type="text" name="address" class="form-input" value="<%= student.address %>">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit">💾 Save Changes</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+</body>
+
+</html>

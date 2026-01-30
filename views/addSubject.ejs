@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Subject</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/addSubject.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link active"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+                <div class="form-container-centered">
+                    <h1>Add New Subject</h1>
+
+                    <form id="addSubjectForm">
+
+                        <div class="card">
+                            <h3>Basic Information</h3>
+                            <div class="form-group">
+                                <label for="subjectName">Subject Name *</label>
+                                <input type="text" id="subjectName" class="form-input"
+                                    placeholder="e.g. Advanced Mathematics" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Assigned Class</label>
+                                <select id="classSelect" class="form-select">
+                                    <option value="" selected disabled>Select Class...</option>
+                                    <% classes.forEach(cls=> { %>
+                                        <option value="<%= cls._id %>">
+                                            <%= cls.className %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Assigned Teacher</label>
+                                <select id="teacherSelect" class="form-select" required>
+                                    <option value="" selected disabled>Select Teacher...</option>
+                                    <% teachers.forEach(teacher=> { %>
+                                        <option value="<%= teacher._id %>">
+                                            <%= teacher.firstName %>
+                                                <%= teacher.lastName %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Grade Distribution</h3>
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Define how grades are
+                                calculated (e.g., Exam 50, Homework 20).</p>
+
+                            <div id="distributionContainer" class="dist-rows-container">
+                            </div>
+
+                            <button type="button" class="btn-add-row" onclick="addDistributionRow()">
+                                <span>➕</span> Add New Assessment Type
+                            </button>
+
+                            <div
+                                style="margin-top: 15px; text-align: right; font-weight: 600; color: var(--primary-color);">
+                                Total Weight: <span id="totalWeight">0</span>%
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">Save Subject</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </main>
+        </div>
+
+        <script>
+            const container = document.getElementById('distributionContainer');
+            const totalWeightSpan = document.getElementById('totalWeight');
+            function addDistributionRow(type = '', weight = '') {
+                const row = document.createElement('div');
+                row.className = 'dist-row';
+                row.innerHTML = `
+                <div>
+                    <input type="text" class="form-input dist-type" placeholder="Assessment Name (e.g. Midterm)" value="${type}" required>
+                </div>
+                <div>
+                    <input type="number" class="form-input dist-weight" placeholder="Weight %" value="${weight}" min="1" max="100" required oninput="calculateTotal()">
+                </div>
+                <button type="button" class="btn-remove-row" onclick="removeRow(this)">🗑️</button>
+            `;
+                container.appendChild(row);
+                calculateTotal();
+            }
+
+            // 2. حذف صف (Remove Row)
+            function removeRow(btn) {
+                btn.closest('.dist-row').remove();
+                calculateTotal();
+            }
+
+            let total;
+            function calculateTotal() {
+                total = 0;
+                document.querySelectorAll('.dist-weight').forEach(input => {
+                    const val = parseFloat(input.value) || 0;
+                    total += val;
+                });
+                totalWeightSpan.innerText = total;
+
+                if (total !== 100) totalWeightSpan.style.color = 'var(--danger-color)';
+                else totalWeightSpan.style.color = 'var(--success-color)';
+            }
+
+            addDistributionRow('First Exam', '');
+
+            document.getElementById('addSubjectForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const subjectName = document.getElementById('subjectName').value;
+                const classId = document.getElementById('classSelect').value;
+                const teacherId = document.getElementById('teacherSelect').value;
+
+                const distribution = [];
+                const rows = document.querySelectorAll('.dist-row');
+
+                rows.forEach(row => {
+                    const typeInput = row.querySelector('.dist-type').value;
+                    const weightInput = row.querySelector('.dist-weight').value;
+
+                    if (typeInput && weightInput) {
+                        distribution.push({
+                            assesmintType: typeInput,
+                            weight: Number(weightInput)
+                        });
+                    }
+                });
+
+
+                const payload = {
+                    subjectName: subjectName,
+                    classId: classId || undefined,   
+                    teacherId: teacherId || undefined,
+                    gradeDistribution: distribution 
+                };
+
+                if (total == 100) {
+            try {
+                const response = await fetch('/school/subject', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = '/school/subject/' + data._id;
+                } else {
+                    console.error('Error:', response.statusText);
+                    alert('Network error occurred.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error occurred.');
+            }
+            
+                }else {
+                    alert('Total weight must be 100%');
+                }
+                   });
+        </script>
+
+</body>
+
+</html>

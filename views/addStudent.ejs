@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Student</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/addStudent.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+                <div class="form-container-centered">
+                    <h1>Add New Student</h1>
+
+                    <div class="card">
+                        <form action="/school/student" method="POST">
+
+                            <div class="section-header">Student Information</div>
+
+                            <div class="form-grid-inner">
+
+                                <div class="form-group full-width">
+                                    <label>Full Name *</label>
+                                    <input type="text" name="name" class="form-input" placeholder="e.g. Ahmad Ali"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>National ID / Student ID *</label>
+                                    <input type="number" name="nationalId" class="form-input" placeholder="xxxxxxxxxx"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date of Birth *</label>
+                                    <input type="date" name="dateOfBirth" class="form-input" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gender *</label>
+                                    <select name="gender" class="form-select" required>
+                                        <option value="" selected disabled>Select Gender...</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Assign to Class *</label>
+                                    <select name="currentClass" class="form-select" required>
+                                        <option value="" selected disabled>Select Class...</option>
+                                        <% classes.forEach((cls)=>{ %>
+                                            <option value="<%= cls._id %>">
+                                                <%= cls.className %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="section-header">Parent / Guardian Information</div>
+
+                            <div class="form-grid-inner">
+
+                                <div class="form-group full-width">
+                                    <label>Parent Name *</label>
+                                    <input type="text" name="parentName" class="form-input"
+                                        placeholder="Guardian Full Name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phone Number *</label>
+                                    <input type="tel" name="parentPhone" class="form-input" placeholder="+962 7..."
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" name="parentEmail" class="form-input"
+                                        placeholder="parent@example.com">
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>Home Address</label>
+                                    <textarea name="address" class="form-textarea"
+                                        placeholder="City, Street, Building No..."></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit">Add Student</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+</body>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Class <%= cls.className %>
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/class.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <% if(role == 'admin'){ %>
+                <a href="/school/class" class="back-link">
+                    <span>&larr;</span> Back to All Classes
+                </a>
+                <% } %>
+
+                <div class="class-header-card">
+                    <div class="header-info">
+                        <h1>
+                            <%= cls.className %>
+                        </h1>
+                        <div class="teacher-badge">
+                            <% if(cls.responsibleTeacher){ %>
+                                <span>👨‍🏫</span>
+                                <%= cls.responsibleTeacher.firstName %>
+                                    <%= cls.responsibleTeacher.lastName %>
+                                        <% }else { %><span>👨‍🏫</span> No Teacher assigned<% } %>
+                        </div>
+                    </div>
+
+                    <div class="header-stats">
+                        <div class="stat-box">
+                            <span class="stat-number">
+                                <%= cls.students.length %>
+                            </span>
+                            <span class="stat-label">Students</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">
+                                <%= cls.capacity %>
+                            </span>
+                            <span class="stat-label">Capacity</span>
+                        </div>
+
+                        <a href="/school/classStudents/<%= cls._id %>" class="btn-view-students">
+                            <span>👥</span> View All Students
+                        </a>
+                        <% if(role==='admin' ){ %>
+                            <a href="/school/class/edit/<%= cls._id %>" class="btn-edit-class"><span>📝</span> Edit
+                                Class</a>
+                            <% } %>
+                    </div>
+                </div>
+
+                <h2 class="section-title">📚 Subjects & Grading</h2>
+                <div class="subjects-grid">
+                    <% if( cls.subjects && cls.subjects.length > 0){ %>
+                        <% cls.subjects.forEach((subject)=> { %>
+                            <div class="subject-card">
+                                <div class="card-header">
+                                    <div class="subject-info">
+                                        <h3>
+                                            <%= subject.subjectName %>
+                                        </h3>
+                                        <div class="teacher-info">
+                                            <span>Instructor:</span>
+                                            <% if(subject.teacher){ %>
+                                                <strong>
+                                                    <%= subject.teacher.firstName %>
+                                                        <%= subject.teacher.lastName %>
+                                                </strong>
+                                                <% } else { %>
+                                                    <strong>Not Assigned</strong>
+                                                    <% } %>
+                                        </div>
+                                    </div>
+                                    <span class="class-badge">
+                                        <%= cls.className %>
+                                    </span>
+                                </div>
+
+                                <div class="card-body">
+                                    <span class="section-label">Grading Scheme</span>
+
+                                    <% if (subject.gradeDistribution && subject.gradeDistribution.length> 0) { %>
+                                        <div class="assessment-list">
+                                            <% subject.gradeDistribution.forEach((gd)=> { %>
+                                                <div class="assessment-tag">
+                                                    <span class="tag-name">
+                                                        <%= gd.assesmintType %>
+                                                    </span>
+                                                    <span class="tag-weight">
+                                                        <%= gd.weight %>%
+                                                    </span>
+                                                </div>
+                                                <% }); %>
+                                        </div>
+                                        <% } else { %>
+                                            <p style="color: #999; font-size: 0.9rem;">No grades defined.</p>
+                                            <% } %>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <div
+                                        style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; background: white; border-radius: 15px;">
+                                        <p>No subjects found.</p>
+                                    </div>
+                                    <% } %>
+                </div>
+
+                <h2 class="section-title">📅 Weekly Schedule</h2>
+
+                <div class="schedule-wrapper">
+                    <% if(cls.schedule && cls.schedule.length>0){ %>
+                        <% cls.schedule.forEach((s)=> { %>
+                            <% if(s.periods && s.periods.length> 0){ %>
+                            <div class="day-column">
+                                <div class="day-header">
+                                    <%= s.day %>
+                                </div>
+
+                                <div class="day-lessons">
+                                    <% if (s.periods && s.periods.length> 0) { %>
+                                        <% s.periods.forEach((p)=> { %>
+
+                                            <div class="lesson-card">
+                                                <div class="period-number">#<%= p.periodNumber %>
+                                                </div>
+                                                <div class="lesson-time">
+                                                    ⏰ <%= p.startTime %> - <%= p.endTime %>
+                                                </div>
+                                                <div class="lesson-subject">
+                                                    <%= p.subject.subjectName %>
+                                                </div>
+                                                <div class="lesson-teacher">
+                                                    👨‍🏫 <%= p.teacher.firstName %>
+                                                        <%= p.teacher.lastName %>
+                                                </div>
+                                            </div>
+
+                                            <% }); %>
+                                                <% } %>
+                                </div>
+                            </div>
+                            <% }%>
+                            <% }); %>
+                                <% } else{ %>
+                                    <div
+                                        style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; background: white; border-radius: 15px; width: 100%;">
+                                        <p>No subjects found.</p>
+                                    </div>
+                                    <%} %>
+
+
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <% if(action && action.includes('addedClass')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Class Added Successfully'
+                })
+            </script>
+            <% }else if(action && action.includes('updatedClass')){ %>
+                <script>
+                    Swal.fire({
+                        title: "Class Updated Successfully!",
+                        icon: "success",
+                        draggable: true
+                    });
+                </script>
+                <% } %>
+</body>
+
+</html>

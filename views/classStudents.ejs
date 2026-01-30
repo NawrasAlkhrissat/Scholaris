@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Class Students</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/classStudents.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+<aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                        <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span><%= role == 'admin' ? 'All Subjects' : 'My Subjects'  %></span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school/class/<%= classId %>" class="back-link">
+                <span>&larr;</span> Back to Class
+            </a>
+
+                <header class="page-header">
+                    <div class="header-content">
+                        <% if (students.length> 0) { %>
+                            <h1>Class <%= students[0].currentClass.className %>
+                            </h1>
+                            <p>Total Students: <%= students.length %>
+                            </p>
+                            <% } else { %>
+                                <h1>Class Students</h1>
+                                <p>No students found.</p>
+                                <% } %>
+                    </div>
+                </header>
+
+                <div class="students-grid">
+                    <% students.forEach((student)=> { %>
+                        <div class="student-card">
+
+                            <div class="avatar-container">
+                                <img src="https://ui-avatars.com/api/?name=<%= student.name %>&background=random&color=fff"
+                                    alt="<%= student.name %>" class="student-avatar">
+                            </div>
+
+                            <h3 class="student-name">
+                                <%= student.name %>
+                            </h3>
+
+                            <a href="/school/student/<%= student._id %>" class="btn-view-profile">
+                                View Details
+                            </a>
+                        </div>
+                        <% }); %>
+                </div>
+
+                <% if (students.length===0) { %>
+                    <div style="text-align: center; color: #999; margin-top: 50px;">
+                        <p>There are no students enrolled in this class yet.</p>
+                    </div>
+                    <% } %>
+
+            </main>
+        </div>
+
+</body>
+
+</html>

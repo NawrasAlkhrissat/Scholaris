@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Classes | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/classes.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+
+        <main class="main-content">
+            <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+            <div class="page-header">
+                <div class="header-title">
+                    <h1>All Classes</h1>
+                    <p>Manage and monitor school classes</p>
+                </div>
+            </div>
+
+            <div class="classes-grid">
+                <% if(classes && classes.length > 0) { %>
+                    <% classes.forEach((cls) => { %>
+                        <div class="class-card">
+                            
+                            <div class="class-header">
+                                <h2 class="class-title"><%= cls.className %></h2>
+                            </div>
+
+                            <div class="class-info">
+                                <div class="info-row">
+                                    <span class="info-icon">👨‍🏫</span>
+                                    <div>
+                                        <span style="font-size: 0.8rem; color: #999; display: block;">Teacher</span>
+                                        <span class="info-label">
+                                            <% if(cls.responsibleTeacher && cls.responsibleTeacher.firstName) { %>
+                                                <%= cls.responsibleTeacher.firstName %> <%= cls.responsibleTeacher.lastName %>
+                                            <% } else { %>
+                                                <%= cls.responsibleTeacher || 'Not Assigned' %>
+                                            <% } %>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-icon">👥</span>
+                                    <div>
+                                        <span style="font-size: 0.8rem; color: #999; display: block;">Capacity</span>
+                                        <span class="info-label"><%= cls.capacity %> Students</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="/school/class/<%= cls._id %>" class="btn-view">
+                                View Class Details &rarr;
+                            </a>
+
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="no-data">
+                        <h3>No Classes Found</h3>
+                        <p>It seems there are no classes registered yet.</p>
+                    </div>
+                <% } %>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

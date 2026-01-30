@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Learn More</title>
+    <link rel="stylesheet" href="/css/learnMore.css">
+</head>
+<body>
+    <%- include('./partials/nav.ejs')  %>
+    <header class="page-header">
+        <h1 class="page-title">About The System</h1>
+        <p class="page-subtitle">A deep dive into the technology and vision behind the Smart School Management System.</p>
+    </header>
+
+    <section class="section-container">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>Revolutionizing School Management</h2>
+                <p>
+                    The SMS (School Management System) is designed to bridge the gap between complex administrative tasks and user-friendly technology. Our goal is to eliminate paper-based workflows and provide a seamless, data-driven environment for education.
+                </p>
+                <p>
+                    Built with modern web technologies, the system ensures that every grade entered, every attendance record marked, and every remark given is instantly processed and securely stored, accessible anywhere, anytime.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://placehold.co/600x400/2C3E50/FFFFFF?text=Modern+Architecture" alt="System Architecture">
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-features">
+        <div class="section-container" style="padding-top: 0;">
+            <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 40px;">Core Technical Highlights</h2>
+            
+            <div class="features-grid">
+                <div class="tech-card">
+                    <h3>📄 Automated PDF Generation</h3>
+                    <p>
+                        Say goodbye to manual report cards. The system dynamically aggregates student grades, calculates GPAs instantly, and generates professional, printable PDF transcripts and certificates with a single click.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tag">Dynamic PDF</span>
+                        <span class="tag">Data Aggregation</span>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <h3>⚡ High-Performance Bulk Updates</h3>
+                    <p>
+                        Designed for efficiency. Teachers can update grades, attendance, and remarks for an entire class in a single transaction. The backend intelligently handles 'Upsert' operations (Create if new, Update if exists) to ensure data integrity.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tag">RESTful API</span>
+                        <span class="tag">Bulk Write</span>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <h3>🛡️ Multi-Level Security</h3>
+                    <p>
+                        Data privacy is paramount. The system implements strict Role-Based Access Control (RBAC). Admins, Teachers, and Students see only what they are authorized to see, protected by JWT authentication and encrypted passwords.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tag">JWT</span>
+                        <span class="tag">Bcrypt</span>
+                        <span class="tag">RBAC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="developer-section">
+        <div class="section-container">
+            <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 50px;">Meet the Developer</h2>
+            
+            <div class="dev-card">
+                <img src="/images/devImage.jpg" alt="Developer Photo" class="dev-avatar">
+                
+                <div class="dev-info">
+                    <h3>Nawras Allkhrissat</h3>
+                    <span class="dev-role">Full Stack Developer</span>
+                    <p class="dev-bio">
+                        A passionate software engineer specializing in building scalable web applications. I focused on creating this SMS project to demonstrate the power of modern MERN stack architecture in solving real-world educational challenges.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/NawrasAlkhrissat">GitHub Profile</a>
+                        <a href="https://www.linkedin.com/authwall?trk=bf&trkInfo=AQFQgNMLlNmR3AAAAZsXcqUg4we0ONHvxFgsPVy6-Y2I3AALH0rfkEvBCtUw440fI0AGoeFTbETNKVFwyG-x8FKDK-MXz2KYnMHZ3uW9P_Wf6n6eI8vCrZUXYDn8HruwX0YSAcI=&original_referer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fnawras-alkhrissat-70ab04303">LinkedIn</a>
+                        <a href="#">Portfolio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>All rights reserved &copy; 2026 - SMS School Management System</p>
+    </footer>
+    
+</body>
+</html>

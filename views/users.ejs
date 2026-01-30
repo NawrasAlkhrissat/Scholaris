@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Teachers | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/users.css">
+
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>All Teachers</h1>
+                        <p>Manage your school staff members</p>
+                    </div>
+                    <div class="action-bar">
+                        <a href="/school/user/add" class="btn-add"><span>➕</span> Add New Teacher</a>
+                    </div>
+                </header>
+
+                <div class="teachers-grid">
+                    <% users.forEach((user)=> { %>
+                        <div class="teacher-card">
+
+                            <div class="avatar-container">
+                                <img src="<%= user.profile.photo || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=random&color=fff&size=128' %>"
+                                    alt="<%= user.firstName %>" class="teacher-avatar">
+                            </div>
+
+                            <h3 class="teacher-name">
+                                <%= user.firstName %>
+                                    <%= user.lastName %>
+                            </h3>
+                            <span class="teacher-role">
+                                <%= user.role || 'Teacher' %>
+                            </span>
+
+                            <p class="teacher-bio">
+                                <%= user.profile.bio || 'No biography available.' %>
+                            </p>
+
+                            <div class="contact-info">
+                                <div class="contact-item">📧 <%= user.email %>
+                                </div>
+                                <div class="contact-item">📞 <%= user.phone || 'N/A' %>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="/school/user/<%= user._id %>" class="btn-action btn-profile">View Profile</a>
+
+                                <button type="button" class="btn-action btn-email btn-icon"
+                                    onclick="toggleEmailForm('<%= user._id %>')" title="Send Email">
+                                    ✉️
+                                </button>
+
+                                <a href="/school/edituser/<%= user._id %>/" class="btn-action btn-edit btn-icon"
+                                    title="Edit">
+                                    ✏️
+                                </a>
+
+                                <form action="/school/user/<%= user._id %>?_method=DELETE" method="post"
+                                    class="delete-form btn-action btn-delete btn-icon">
+                                    <button style="border: none;" type="submit">🗑️</button>
+                                </form>
+                            </div>
+
+                            <div id="email-form-<%= user._id %>" class="email-form-container">
+                                <form action="/school/email/<%= user._id %>" method="POST">
+                                    <input type="hidden" name="recipientEmail" value="<%= user.email %>">
+
+                                    <textarea name="message" class="email-input"
+                                        placeholder="Write your message here..." required></textarea>
+
+                                    <div class="email-footer">
+                                        <button type="button" class="btn-close-email"
+                                            onclick="toggleEmailForm('<%= user._id %>')">Cancel</button>
+                                        <button type="submit" class="btn-send">Send ✈️</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        <% }) %>
+                </div>
+
+                <% if (users.length===0) { %>
+                    <div style="text-align: center; color: #999; margin-top: 50px;">
+                        <p>No teachers found.</p>
+                    </div>
+                    <% } %>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Are you sure you want to delete this Teacher?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+            function toggleEmailForm(userId) {
+                const form = document.getElementById('email-form-' + userId);
+                if (form.style.display === 'block') {
+                    form.style.display = 'none';
+                } else {
+                    document.querySelectorAll('.email-form-container').forEach(el => el.style.display = 'none');
+
+                    form.style.display = 'block';
+                }
+            }
+        </script>
+        <% if(action && action.includes("added")){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Teacher Added Successfully!"
+                });
+            </script>
+            <% }else if(action && action.includes("deleted")){ %>
+                <script>
+                    const Toast1 = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast1.fire({
+                        icon: "success",
+                        title: "Teacher Deleted Successfully!"
+                    });
+                </script>
+                <% } else if(action && action.includes("updated")){ %>
+                    <script>
+                        const Toast2 = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast2.fire({
+                            icon: "success",
+                            title: "Teacher Updated Successfully!"
+                        });
+                    </script>
+                    <% }else if(action && action.includes("emailSent")){ %>
+                        <script>
+                            const Toast3 = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast3.fire({
+                                icon: "success",
+                                title: "Email Sent Successfully!"
+                            });
+                        </script>
+                        <% } %>
+
+</body>
+
+</html>

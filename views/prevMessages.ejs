@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message History | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="/css/prevMessages.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Profile
+                </a>
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>Message History</h1>
+                        <p>View previous conversations and send follow-ups.</p>
+                    </div>
+                </header>
+
+                <div class="messages-container">
+                    <% if(messages && messages.length> 0){ %>
+                        <% messages.forEach((message, index)=> { %>
+                            <div class="message-card">
+
+                                <div class="msg-header">
+                                    <div class="sender-info">
+                                        <h3>
+                                            <%= message.senderName %>
+                                        </h3>
+                                        <span class="sender-email">
+                                            <span>📧</span>
+                                            <%= message.senderEmail %>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="conversation-block">
+                                    <div class="msg-bubble original-msg">
+                                        <%= message.message %>
+                                    </div>
+
+                                    <% if(message.reply) { %>
+                                        <div class="msg-bubble reply-msg">
+                                            <%= message.reply %>
+                                        </div>
+                                        <% } %>
+                                </div>
+
+                                <div class="action-area">
+                                    <button type="button" class="btn-reply-toggle"
+                                        onclick="toggleReplyForm('<%= index %>')">
+                                        <span>↩</span> Send Another Message
+                                    </button>
+                                    <form action="/school/messages/<%= message._id %>?_method=DELETE" method="post">
+                                        <button type="submit" class="btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">
+                                            <span>🗑️</span> Delete Message
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div id="reply-form-<%= index %>" class="reply-form-container">
+                                    <form action="/school/reply/<%= message._id %>" method="POST">
+                                        <input type="hidden" name="recipientEmail" value="<%= message.senderEmail %>">
+
+                                        <label
+                                            style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">
+                                            Write a follow-up:
+                                        </label>
+
+                                        <textarea name="reply" class="reply-textarea" rows="4"
+                                            placeholder="Type your message here..."></textarea>
+
+                                        <div style="text-align: right;">
+                                            <button type="submit" class="btn-send-reply">Send ✈️</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div
+                                        style="text-align: center; padding: 50px; color: #999; background: white; border-radius: 16px; box-shadow: var(--shadow);">
+                                        <p style="font-size: 1.1rem;">No message history found.</p>
+                                    </div>
+                                    <% } %>
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function toggleReplyForm(index) {
+                const form = document.getElementById('reply-form-' + index);
+                if (form.style.display === 'block') {
+                    form.style.display = 'none';
+                } else {
+                    document.querySelectorAll('.reply-form-container').forEach(el => el.style.display = 'none');
+                    form.style.display = 'block';
+                    form.querySelector('textarea').focus();
+                }
+            }
+        </script>
+        <% if(action && action.includes('deletedMessage')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Email Deleted Successfully"
+                });
+            </script>
+            
+            <% } %>
+
+</body>
+
+</html>

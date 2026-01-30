@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Subjects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/subjects.css">
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link active"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <% if(role ===' admin' ){ %>
+                    <a href="/school/dashboard" class="back-link">
+                        <span>&larr;</span> Back to Dashboard
+                    </a>
+                    <% } %>
+
+
+                        <header class="page-header">
+                            <h1 class="page-title">
+                                <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                            </h1>
+                            <p class="page-subtitle">Overview of your curriculum and grading schemes.</p>
+                        </header>
+
+                        <div class="subjects-grid">
+                            <% if(subjects && subjects.length > 0 ){ %>
+                                <% subjects.forEach(s=> { %>
+                                    <div class="subject-card">
+                                        <div class="card-header">
+                                            <div class="subject-info">
+                                                <h3>
+                                                    <%= s.subjectName %>
+                                                </h3>
+                                                <div class="teacher-info">
+                                                    <span>Instructor:</span>
+                                                    <strong>
+                                                        <%= s.teacher.firstName %>
+                                                            <%= s.teacher.lastName %>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                            <span class="class-badge">
+                                                <%= s.class.className %>
+                                            </span>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <span class="section-label">Grading Scheme</span>
+
+                                            <% if (s.gradeDistribution && s.gradeDistribution.length> 0) { %>
+                                                <div class="assessment-list">
+                                                    <% s.gradeDistribution.forEach(g=> { %>
+                                                        <div class="assessment-tag">
+                                                            <span class="tag-name">
+                                                                <%= g.assesmintType %>
+                                                            </span>
+                                                            <span class="tag-weight">
+                                                                <%= g.weight %>%
+                                                            </span>
+                                                        </div>
+                                                        <% }) %>
+                                                </div>
+                                                <% } else { %>
+                                                    <p style="color: #999; font-size: 0.9rem; font-style: italic;">
+                                                        No grades configured yet.
+                                                    </p>
+                                                    <% } %>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <a href="/school/subject/<%= s._id %>" class="manage-link">Manage Subject
+                                                &rarr;</a>
+                                        </div>
+                                    </div>
+
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div
+                                                style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; background: white; border-radius: 15px;">
+                                                <p>No subjects found.</p>
+                                            </div>
+                                            <% } %>
+                        </div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <% if(action && action.includes('deletedSubject')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Subject Deleted Successfully"
+                });
+            </script>
+            <% } %>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="logo-area">
+            <img src="/images/logo.jpg" alt="SMS Logo" class="logo-img">
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Please enter your details to sign in.</p>
+        </div>
+
+        <form action="/auth/login" method="post" onsubmit="alertt();">
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input id="email" type="email" name="email" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" type="password" name="password" class="form-input"
+                    placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+        <!-- <div class="login-link">
+            Don't have an account? <a href="/auth/signup">Sign Up</a>
+        </div> -->
+        <a href="/" class="home-link">← Back to Home</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if(action && action.includes("notAuthenticated")){ %>
+        <script>
+            setTimeout(() => {
+                Swal.fire({
+                    icon: "info",
+                    title: "Oops... Not Authenticated",
+                    text: "You Must be logged in to access this page.",
+                });
+            }, 500);
+        </script>
+        <% }else if(action && action.includes("forbidden")){ %>
+            <script>
+                Swal.fire({
+                    icon: "info",
+                    title: "Oops... Forbidden Access/Action",
+                    text: "You are not authorized to access this page/action.",
+                });
+            </script>
+            <% }else if(action && action.includes("invalidCredentials")){ %>
+                <script>
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops... Invalid Credentials",
+                        text: "Please check your email and password.",
+                    });        
+                </script>
+                <% } else if(action && action.includes('logout')){ %>
+                    <script>
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully Logged Out"
+                        });
+                    </script>
+                    <% } %>
+</body>
+
+</html>

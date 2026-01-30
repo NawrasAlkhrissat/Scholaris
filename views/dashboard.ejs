@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/dashboard.css">
+
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <a href="/school" class="back-link">
+                    <span>&larr;</span> Back to Profile
+                </a>
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>Admin Dashboard</h1>
+                        <p>Welcome back! Here's what's happening in your school.</p>
+                    </div>
+                    <!-- <a href="/email" class="btn-primary-action">
+                        <span>✉️</span> Send New Email
+                    </a> -->
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card card-green">
+                        <div class="stat-icon-bg">🎓</div>
+                        <div>
+                            <div class="stat-value">
+                                <%= students.length %>
+                            </div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <a href="/school/student" class="stat-link">View All Students &rarr;</a>
+                    </div>
+                    <div class="stat-card card-blue">
+                        <div class="stat-icon-bg">👨‍🏫</div>
+                        <div>
+                            <div class="stat-value">
+                                <%= users.length %>
+                            </div>
+                            <div class="stat-label">Total Teachers</div>
+                        </div>
+                        <a href="/school/user" class="stat-link">View All Teachers &rarr;</a>
+                    </div>
+
+                    <div class="stat-card card-orange">
+                        <div class="stat-icon-bg">🏫</div>
+                        <div>
+                            <div class="stat-value">
+                                <%= classes.length %>
+                            </div>
+                            <div class="stat-label">Active Classes</div>
+                        </div>
+                        <a href="/school/class" class="stat-link">View All Classes &rarr;</a>
+                    </div>
+
+                    <div class="stat-card card-purple">
+                        <div class="stat-icon-bg">📚</div>
+                        <div>
+                            <div class="stat-value">
+                                <%= subjects.length %>
+                            </div>
+                            <div class="stat-label">Subjects</div>
+                        </div>
+                        <a href="/school/subject" class="stat-link">View All Subjects &rarr;</a>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="actions-grid">
+                    <a href="/school/student/add" class="action-btn"><span>➕</span> Add Student</a>
+                    <a href="/school/user/add" class="action-btn"><span>➕</span> Add Teacher / Admin</a>
+                    <a href="/school/class/add" class="action-btn"><span>➕</span> Add Class</a>
+                    <a href="/school/subject/add" class="action-btn"><span>➕</span> Add Subject</a>
+                    <a href="/school/academic-calendar/add" class="action-btn"><span>➕</span> Add Event</a>
+                    <a href="/school/academic-calendar" class="action-btn"><span>🗓️</span> View Calendar</a>
+                    <a href="/school/messages" class="action-btn"><span>💬</span> View Previous Messages</a></a>
+                </div>
+
+                <h3 class="section-title">Recent Messages (<%= messages.length %>)</h3>
+
+                <div class="messages-container">
+                    <% if(messages.length> 0) { %>
+                        <% messages.forEach((m, index)=> { %>
+                            <div class="message-card">
+
+                                <div class="msg-header">
+                                    <div class="sender-info">
+                                        <h3>
+                                            <%= m.senderName %>
+                                        </h3>
+                                        <span class="sender-email">
+                                            <%= m.senderEmail %>
+                                        </span>
+                                    </div>
+                                    <span class="msg-date">
+                                        <%= m.date ? new Date(m.date).toLocaleDateString() : 'Just now' %>
+                                    </span>
+                                </div>
+
+                                <div class="msg-body">
+                                    <%= m.message %>
+                                </div>
+
+                                <div>
+                                    <button type="button" class="btn-reply-toggle"
+                                        onclick="toggleReplyForm('<%= index %>')">
+                                        ↩ Reply
+                                    </button>
+
+                                    <div id="reply-form-<%= index %>" class="reply-form-container">
+                                        <form action="/school/reply/<%= m._id %>" method="POST"> <input type="hidden"
+                                                name="recipientEmail" value="<%= m.senderEmail %>">
+                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Your
+                                                Reply:</label>
+                                            <textarea name="reply" class="reply-textarea" rows="4"
+                                                placeholder="Write your reply here..."></textarea>
+                                            <div style="text-align: right;">
+                                                <button type="submit" class="btn-send-reply">Send Message</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div
+                                        style="text-align: center; padding: 40px; color: #999; background: white; border-radius: 16px;">
+                                        <p>No new messages available.</p>
+                                    </div>
+                                    <% } %>
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function toggleReplyForm(index) {
+                const formContainer = document.getElementById('reply-form-' + index);
+                if (formContainer.style.display === 'block') {
+                    formContainer.style.display = 'none';
+                } else {
+                    formContainer.style.display = 'block';
+                }
+            }
+        </script>
+        <% if(action && action.includes('addedStudent')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Student Added Successfully"
+                });
+            </script>
+            <% }else if(action && action.includes('emailSent')){ %>
+                <script>
+                    const Toast1 = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast1.fire({
+                        icon: "success",
+                        title: "Email Sent Successfully"
+                    });
+                </script>
+                <% } %>
+</body>
+
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Certificate | SMS</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cairo:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. DASHBOARD STYLES (NAV & SIDEBAR)
+           ========================================= */
+        :root {
+            --dash-primary: #2C3E50;
+            --dash-accent: #3498DB;
+            --dash-bg: #F4F6F9;
+            --dash-white: #ffffff;
+            --sidebar-width: 260px;
+        }
+
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: var(--dash-bg); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Navbar */
+         .navbar {
+     background-color: var(--white);
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+     /* ظل خفيف */
+     padding: 15px 50px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     /* تثبيت الشريط عند التمرير */
+     top: 0;
+     z-index: 1000;
+ }
+
+ /* --- تصميم الشعار (يسار) --- */
+ .nav-brand {
+     display: flex;
+     align-items: center;
+     gap: 15px;
+     text-decoration: none;
+     color: var(--primary-color);
+ }
+
+ .nav-logo {
+     height: 45px;
+     /* ارتفاع ثابت */
+     width: auto;
+     object-fit: contain;
+ }
+
+ .brand-text {
+     font-size: 1.5rem;
+     font-weight: 700;
+     letter-spacing: -0.5px;
+     font-family: 'Poppins', sans-serif;
+ }
+
+ /* --- تصميم الروابط (وسط) --- */
+ .nav-links {
+     display: flex;
+     gap: 30px;
+     align-items: center;
+ }
+
+ .nav-link {
+     text-decoration: none;
+     color: var(--primary-color);
+     font-weight: 500;
+     transition: color 0.3s;
+     font-size: 0.95rem;
+     font-family: 'Poppins', sans-serif;
+ }
+
+ .nav-link:hover {
+     color: var(--accent-color);
+ }
+
+ /* --- تصميم الأزرار (يمين) --- */
+ .nav-buttons {
+     display: flex;
+     gap: 15px;
+     /* المسافة بين زر الدخول وزر التسجيل */
+     align-items: center;
+ }
+
+ /* زر تسجيل الدخول (داكن) */
+ .btn-login {
+     background-color: var(--primary-color);
+     color: var(--white);
+     padding: 10px 25px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: 600;
+     font-size: 0.9rem;
+     font-family: 'Poppins', sans-serif;
+     transition: all 0.3s ease;
+ }
+
+ .btn-login:hover {
+     background-color: #1a252f;
+     /* درجة أغمق قليلاً */
+     transform: translateY(-2px);
+ }
+
+ /* زر إنشاء حساب (سماوي - مميز) */
+ .btn-signup {
+     background-color: var(--accent-color);
+     color: var(--white);
+     padding: 10px 25px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: 600;
+     font-size: 0.9rem;
+     font-family: 'Poppins', sans-serif;
+     transition: all 0.3s ease;
+     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+     /* ظل لتمييز الزر */
+ }
+
+ .btn-signup:hover {
+     background-color: var(--primary-color);
+     transform: translateY(-2px);
+ }
+
+ /* --- 2. Layout Structure --- */
+ .dashboard-container {
+     display: flex;
+     flex: 1;
+ }
+
+ /* Sidebar */
+ .sidebar {
+     width: var(--sidebar-width);
+     background-color: var(--white);
+     border-right: 1px solid #e1e1e1;
+     padding: 30px 20px;
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+     height: calc(100vh - 70px);
+     position: sticky;
+     top: 70px;
+ }
+
+ .sidebar-title {
+     font-size: 0.85rem;
+     text-transform: uppercase;
+     color: #999;
+     font-weight: 700;
+     margin-bottom: 15px;
+     letter-spacing: 1px;
+ }
+
+ .sidebar-link {
+     display: flex;
+     align-items: center;
+     padding: 12px 15px;
+     text-decoration: none;
+     color: var(--text-gray);
+     font-weight: 500;
+     border-radius: 10px;
+     transition: all 0.3s;
+ }
+
+ .sidebar-link:hover,
+ .sidebar-link.active {
+     background-color: #EBF5FB;
+     color: var(--accent-color);
+ }
+
+ .sidebar-link span {
+     margin-left: 10px;
+ }
+
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+
+        /* Action Bar */
+        .action-bar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .action-bar form {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* مسافة بين الحقول والزر */
+        }
+
+        .form-input, .form-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--dash-primary);
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--dash-accent);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-select {
+            cursor: pointer;
+            min-width: 160px;
+        }
+        .btn-generate { background-color: #27ae60; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-weight: 600; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-generate:hover { background-color: #219150; }
+
+        /* Preview Wrapper */
+        .preview-area {
+            background-color: #525659;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* =========================================
+           2. CERTIFICATE STYLES
+           ========================================= */
+        
+        .cert-scope {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- 3. حاوية الصفحة --- */
+        .sheet {
+            width: 210mm;
+            height: 296mm;
+            position: relative; /* ضروري جداً لعمل الـ absolute positioning داخله */
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+            color: #2c3e50;
+            font-family: 'Cairo', sans-serif;
+            text-align: left;
+            transform: scale(0.85);
+            transform-origin: top center;
+            margin-bottom: -200px;
+        }
+
+        /* --- 4. الإطار والزخارف --- */
+        .border-frame {
+            position: absolute; top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+            border: 3px double #1a237e; z-index: 10; pointer-events: none;
+        }
+        .corner {
+            position: absolute; width: 30px; height: 30px; background: white;
+            border: 4px solid #1a237e; z-index: 11;
+        }
+        .tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .tr { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
+        .bl { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
+        .br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
+        /* --- 5. العلامة المائية --- */
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; opacity: 0.05; z-index: 1; filter: grayscale(100%);
+        }
+
+        /* --- 6. محتوى الصفحة --- */
+        .content-layer {
+            position: relative; z-index: 5; padding: 20mm; height: 100%;
+            display: flex; flex-direction: column;
+        }
+
+        /* --- المتغيرات والتنسيقات الداخلية --- */
+        .cert-scope {
+            --primary: #1a237e; --accent: #c5a059; --text-gray: #7f8c8d;
+        }
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #e0e0e0; padding-bottom: 20px; margin-bottom: 30px; }
+        .school-info h2 { margin: 0; color: #1a237e; font-size: 1.4rem; text-transform: uppercase; }
+        .school-info p { margin: 2px 0; font-size: 0.85rem; color: #555; }
+        .logo-img { width: 100px; height: auto; }
+        .meta-info { text-align: right; }
+        .meta-info p { margin: 3px 0; font-size: 0.9rem; font-weight: 600; }
+
+        /* Title */
+        .report-title { text-align: center; margin-bottom: 30px; }
+        .report-title h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #1a237e; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .report-title span { display: block; width: 100px; height: 3px; background: #c5a059; margin: 8px auto 0; }
+
+        /* Student Details */
+        .student-box {
+            background-color: #f8f9fa; border: 1px solid #eee; border-left: 5px solid #c5a059;
+            padding: 25px; border-radius: 8px; display: grid; grid-template-columns: 1fr; gap: 15px; font-size: 1rem;
+        }
+        .row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
+        .lbl { font-weight: 700; color: #7f8c8d; text-transform: uppercase; font-size: 0.85rem; }
+        .val { font-weight: 700; color: #1a237e; }
+
+        /* --- FIX: STATUS AREA POSITIONING --- */
+        /* التعديل هنا: استخدام position absolute لضمان وجودها في المكان الصحيح */
+        .status-area { 
+            position: absolute; /* يجعل العنصر حراً من تدفق الصفحة */
+            bottom: 50px;       /* يبعده 50 بكسل عن أسفل الورقة (فوق الإطار السفلي) */
+            left: 0; 
+            width: 100%;        /* عرض كامل لضمان التوسط */
+            text-align: center; 
+            z-index: 20;
+        }
+        
+        .status-badge {
+            display: inline-block; padding: 10px 50px; border-radius: 50px; color: white;
+            font-weight: 800; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* Grades Table */
+        .grades-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+        .grades-table th { background-color: #1a237e; color: white; padding: 12px; text-align: left; text-transform: uppercase; }
+        .grades-table td { padding: 10px 12px; border-bottom: 1px solid #eee; font-weight: 600; color: #333; }
+        .grades-table tr:nth-child(even) { background-color: #f8f9fa; }
+
+        /* GPA */
+        .gpa-area { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .gpa-card {
+            border: 2px solid #1a237e; border-radius: 10px; padding: 15px 40px; text-align: center;
+        }
+        .gpa-title { font-size: 0.9rem; text-transform: uppercase; color: #777; font-weight: 700; }
+        .gpa-num { font-size: 2.2rem; font-weight: 800; color: #c5a059; line-height: 1.1; }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="/" class="nav-brand">
+        <img src="/images/logo.jpg" alt="SMS Logo" class="nav-logo">
+        <span style="font-weight: bold; color: #0056b3;">Scholaris</span>
+        <span class="brand-text">AL-Nawras High School</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/learn-more" class="nav-link">About</a>
+        <a href="/contact" class="nav-link">Contact</a>
+    </div>
+
+    <div class="nav-buttons">
+        <% if(!isAuthenticated){ %>
+        <a href="/auth/login" class="btn-login">Login</a>
+        <a href="/auth/signup" class="btn-signup">Sign Up</a>
+        <% }else {%>
+            <a href="/auth/logout" class="btn-login">Logout</a>
+            <% } %>
+    </div>
+</nav>
+
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+        <main class="main-content">
+            
+            <div class="action-bar">
+                <h2 style="margin: 0; font-size: 1.2rem; color: #2C3E50;">Certificate Preview</h2>
+                
+                <form action="/teacher/certificate/<%= student._id %>" method="POST">
+                    <input type="text" placeholder="2025-2026" class="form-input" name="academicYear" required>
+                    <select name="semester" class="form-select" required>
+                        <option value="" disabled selected>Select Semester</option>
+                        <option value="first Semester">First Semester</option>
+                        <option value="Second Semester">Second Semester</option>
+                        <option value="Summer Semester">Summer Semester</option>
+                    </select>
+                    <button type="submit" class="btn-generate">
+                        <span>🖨️</span> Generate PDF & Send
+                    </button>
+                </form>
+            </div>
+            
+            <div style="margin-bottom: 20px; color: #666; font-size: 0.9rem;">
+                * This certificate will be sent automatically to the parent's email upon generation.
+            </div>
+
+            <div class="preview-area cert-scope">
+                
+                <div class="sheet">
+                    <div class="border-frame">
+                        <div class="corner tl"></div><div class="corner tr"></div>
+                        <div class="corner bl"></div><div class="corner br"></div>
+                    </div>
+
+                    <img src="/images/logo.jpg" class="watermark" alt="Watermark">
+
+                    <div class="content-layer">
+                        
+                        <header class="header">
+                            <div class="school-info">
+                                <h2><%= school.name %></h2>
+                                <p><%= school.address %></p>
+                                <p>Phone: <%= school.contacts.phone %></p>
+                                <p>Email: <%= school.contacts.email %></p>
+                            </div>
+                            <div class="logo-container">
+                                <img src="data:image/jpg;base64,<%= logoBase64 %>" alt="Logo" class="logo-img">
+                            </div>
+                            <div class="meta-info">
+                                <p>Academic Year: <%= academicYear %></p>
+                                <p>Semester: <%= semester %></p>
+                                <p>Date: <%= new Date().toLocaleDateString() %></p>
+                            </div>
+                        </header>
+
+                        <div class="report-title">
+                            <h1>Official Transcript</h1>
+                            <span></span>
+                        </div>
+
+                        <div class="student-box">
+                            <div class="row"><span class="lbl">Student Name</span> <span class="val"><%= student.name %></span></div>
+                            <div class="row"><span class="lbl">National ID</span> <span class="val"><%= student.nationalId %></span></div>
+                            <div class="row"><span class="lbl">Grade / Class</span> <span class="val"><%= cls.className %></span></div>
+                            <div class="row"><span class="lbl">Date of Birth</span> <span class="val"><%= new Date(student.dateOfBirth).toLocaleDateString() %></span></div>
+                            <div class="row"><span class="lbl">Gender</span> <span class="val" style="text-transform: capitalize;"><%= student.gender %></span></div>
+                            <div class="row"><span class="lbl">Homeroom Teacher</span> <span class="val"><%= cls.responsibleTeacher.firstName %> <%= cls.responsibleTeacher.lastName %></span></div>
+                        </div>
+                        
+                    </div> 
+                    <div class="status-area">
+                        <div style="margin-bottom: 10px; color:#7f8c8d; font-weight:600; text-transform:uppercase;">Academic Standing</div>
+                        <div class="status-badge" style="background-color: <% if(finalResult.status == 'pass') { %>#27ae60<% } else { %>#e74c3c<% } %>; color:#e0e0e0 ;">
+                            <%= finalResult.status %>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="sheet">
+                    <div class="border-frame">
+                        <div class="corner tl"></div><div class="corner tr"></div>
+                        <div class="corner bl"></div><div class="corner br"></div>
+                    </div>
+
+                    <img src="data:image/jpg;base64,<%= logoBase64 %>" class="watermark" alt="Watermark">
+
+                    <div class="content-layer">
+                        
+                        <div class="report-title" style="margin-top: 10px;">
+                            <h1>Academic Performance</h1>
+                            <span></span>
+                        </div>
+
+                        <table class="grades-table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">Subject</th>
+                                    <th width="20%" style="text-align: center;">Marks (100)</th>
+                                    <th width="20%" style="text-align: center;">Grade</th>
+                                    <th width="20%">Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% marks.forEach(mark => { %>
+                                <tr>
+                                    <td><%= mark.subjectName %></td>
+                                    <td style="text-align: center;"><%= mark.score %></td>
+                                    <td style="text-align: center; font-weight: bold;">
+                                        <% if(mark.score >= 90) { %> <span style="color:#1a237e;">A</span>
+                                        <% } else if(mark.score >= 80) { %> <span style="color:#1a237e;">B</span>
+                                        <% } else if(mark.score >= 70) { %> <span style="color:#333;">C</span>
+                                        <% } else if(mark.score >= 60) { %> <span style="color:#333;">D</span>
+                                        <% } else { %> <span style="color:#c0392b;">F</span> <% } %>
+                                    </td>
+                                    <td>
+                                        <% if(mark.score >= 50) { %>
+                                            <span style="color:#27ae60; font-weight:bold;">Pass</span>
+                                        <% } else { %>
+                                            <span style="color:#c0392b; font-weight:bold;">Fail</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+
+                        <div class="gpa-area">
+                            <div class="gpa-card">
+                                <div class="gpa-title">Final GPA / Average</div>
+                                <div class="gpa-num"><%= finalResult.average %>%</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

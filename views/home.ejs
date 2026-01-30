@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Home</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+    <%- include('./partials/nav.ejs')  %>
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <%= school.name %>
+                <br>
+                <span>Digital Learning Portal</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Welcome to our official School Management System. Connecting students, teachers, and parents in one secure, data-driven platform for a better educational future.
+            </p>
+            
+            <div class="hero-buttons">
+                <a href=<%= isAuthenticated ? '/school/user/' + userId : '/auth/login' %> class="btn-primary"> <%= role != null ? 'Go to Portal' : 'Login to Portal' %></a>
+                <a href="/learn-more" class="btn-outline">About System</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <h2 class="section-title">Why Choose Our System?</h2>
+        <div class="cards-grid">
+            <div class="feature-card">
+                <span class="icon">📊</span>
+                <h3>Data-Driven Grades</h3>
+                <p>Track academic performance with real-time analytics and generate official PDF transcripts instantly.</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="icon">📩</span>
+                <h3>Smart Attendance & Alerts</h3>
+                <p>Effortlessly track daily attendance and automatically notify parents via email regarding absence or tardiness.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="icon">🛡️</span>
+                <h3>High Security</h3>
+                <p>Multi-level role-based access control (RBAC) ensuring your school's sensitive data remains private and secure.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>All rights reserved &copy; 2026 - SMS School Management System</p>
+    </footer>
+</body>
+</html>

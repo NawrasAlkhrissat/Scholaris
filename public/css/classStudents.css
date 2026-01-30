@@ -1,0 +1,359 @@
+/* --- 1. Global Variables (Same Theme) --- */
+:root {
+    --primary-color: #2C3E50;
+    --accent-color: #3498DB;
+    --bg-light: #F4F6F9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-gray: #666;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --sidebar-width: 260px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Navbar & Sidebar --- */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* ظل خفيف */
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    /* تثبيت الشريط عند التمرير */
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- تصميم الشعار (يسار) --- */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.nav-logo {
+    height: 45px;
+    /* ارتفاع ثابت */
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- تصميم الروابط (وسط) --- */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* --- تصميم الأزرار (يمين) --- */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    /* المسافة بين زر الدخول وزر التسجيل */
+    align-items: center;
+}
+
+/* زر تسجيل الدخول (داكن) */
+.btn-login {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #1a252f;
+    /* درجة أغمق قليلاً */
+    transform: translateY(-2px);
+}
+
+/* زر إنشاء حساب (سماوي - مميز) */
+.btn-signup {
+    background-color: var(--accent-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+    /* ظل لتمييز الزر */
+}
+
+.btn-signup:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* --- 2. Layout Structure --- */
+.dashboard-container {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--white);
+    border-right: 1px solid #e1e1e1;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100vh - 70px);
+    position: sticky;
+    top: 70px;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: #EBF5FB;
+    color: var(--accent-color);
+}
+
+.sidebar-link span {
+    margin-left: 10px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* --- 2. Page Header & Search --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-content h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.header-content p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+}
+
+/* شريط بحث جمالي (Visual Only) */
+.search-box {
+    position: relative;
+    width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+/* --- 3. Students Grid --- */
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.student-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 30px 20px;
+    text-align: center;
+    /* توسيط المحتوى للبروفايل */
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-top: 4px solid var(--accent-color);
+    /* ثيم موحد مع الصفحات السابقة */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.student-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* الصورة الرمزية */
+.avatar-container {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.student-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-light);
+}
+
+/* بيانات الطالب */
+.student-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+/* شارة الـ GPA */
+.gpa-badge {
+    display: inline-block;
+    background-color: #EBF5FB;
+    color: var(--accent-color);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.gpa-label {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: #7f8c8d;
+    margin-right: 5px;
+}
+
+/* زر التفاصيل */
+.btn-view-profile {
+    color: var(--text-gray);
+    text-decoration: none;
+    border: 1px solid #ddd;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.btn-view-profile:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+}
+
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        padding: 15px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+}

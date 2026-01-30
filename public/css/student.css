@@ -1,0 +1,421 @@
+/* --- 1. Global Variables --- */
+:root {
+    --primary-color: #2C3E50;
+    --accent-color: #3498DB;
+    --bg-light: #F4F6F9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-gray: #666;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --sidebar-width: 260px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* ظل خفيف */
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    /* تثبيت الشريط عند التمرير */
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- تصميم الشعار (يسار) --- */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.nav-logo {
+    height: 45px;
+    /* ارتفاع ثابت */
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- تصميم الروابط (وسط) --- */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* --- تصميم الأزرار (يمين) --- */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    /* المسافة بين زر الدخول وزر التسجيل */
+    align-items: center;
+}
+
+/* زر تسجيل الدخول (داكن) */
+.btn-login {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #1a252f;
+    /* درجة أغمق قليلاً */
+    transform: translateY(-2px);
+}
+
+/* زر إنشاء حساب (سماوي - مميز) */
+.btn-signup {
+    background-color: var(--accent-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+    /* ظل لتمييز الزر */
+}
+
+.btn-signup:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* --- 2. Layout Structure --- */
+.dashboard-container {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--white);
+    border-right: 1px solid #e1e1e1;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100vh - 70px);
+    position: sticky;
+    top: 70px;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: #EBF5FB;
+    color: var(--accent-color);
+}
+
+.sidebar-link span {
+    margin-left: 10px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* --- 2. Page Specific Styles --- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.info-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 30px;
+    border-top: 4px solid transparent;
+}
+
+.student-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    border-top-color: var(--accent-color);
+}
+
+.student-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-light);
+}
+
+.student-title h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.student-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.class-badge {
+    background-color: #EBF5FB;
+    color: var(--accent-color);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.data-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-label {
+    font-size: 0.8rem;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.data-value {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.parent-card {
+    border-top-color: var(--primary-color);
+}
+
+.contact-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+/* --- 🟢 NEW: Action Buttons List Design (Right Column) --- */
+
+.records-card {
+    border-top-color: var(--primary-color);
+    padding: 25px;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    margin-bottom: 20px;
+    margin-top: -15px;
+    /* Pull closer to title */
+}
+
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-light);
+    padding: 15px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.action-btn:hover {
+    background-color: var(--white);
+    border-color: var(--accent-color);
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: var(--accent-color);
+}
+
+.btn-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    background-color: #fff;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.arrow-icon {
+    font-size: 1.1rem;
+}
+.btn-edit-profile{
+    background-color: var(--accent-color);
+    color: var(--bg-light);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 25px;
+    margin-left: 200px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+
+}
+.btn-edit-profile:hover{
+    background-color: var(--text-gray);
+    color: var(--bg-light);
+}
+
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        padding: 15px;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}

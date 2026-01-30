@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/editUser.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs')  %>
+    <div class="dashboard-container">
+       <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                        <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span><%= role == 'admin' ? 'All Subjects' : 'My Subjects'  %></span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">Edit Profile</h1>
+                <p style="color: #666;">Update your personal information and account settings.</p>
+            </header>
+
+            <form id="editForm" action="/school/user/<%= user._id %>?_method=PUT" method="POST"
+                enctype="multipart/form-data">
+  
+                <div class="edit-grid">
+
+                    <div class="card profile-upload-section">
+
+                        <div class="img-wrapper">
+                            <img id="imagePreview"
+                                src="<%= user.profile && user.profile.photo ? user.profile.photo : 'https://ui-avatars.com/api/?background=random&name=' + user.firstName %>"
+                                alt="Profile" class="img-preview">
+
+                            <div class="edit-icon" onclick="document.getElementById('fileInput').click()">
+                                ✏️
+                            </div>
+                        </div>
+
+                        <input type="file" id="fileInput" name="photo" accept="image/*" onchange="previewFile()">
+
+                        <label class="bio-label">Bio / About Me</label>
+                        <textarea name="bio" class="bio-textarea"
+                            placeholder="Write a short bio..."><%= user.profile ? user.profile.bio : '' %></textarea>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px; color: var(--primary-color);">Account Details</h3>
+
+                        <div class="form-grid-inner">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="firstName" class="form-input" value="<%= user.firstName %>"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="lastName" class="form-input" value="<%= user.lastName %>"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" name="email" class="form-input" value="<%= user.email %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="phone" class="form-input" value="<%= user.phone %>">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="newPassword" name="password" class="form-input"
+                                    placeholder="••••••••">
+                                <span class="password-hint">Leave blank if you don't want to change it.</span>
+                            </div>
+
+                            <div class="form-group full-width hidden-field" id="confirmPasswordGroup">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-input"
+                                    placeholder="Retype your password">
+                                <span class="error-msg" id="passwordError">Passwords do not match!</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="/school/user/<%= user._id %>" class="btn-cancel">Cancel</a>
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        function previewFile() {
+            const preview = document.getElementById('imagePreview');
+            const file = document.getElementById('fileInput').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        const newPassInput = document.getElementById('newPassword');
+        const confirmPassGroup = document.getElementById('confirmPasswordGroup');
+        const confirmPassInput = document.getElementById('confirmPassword');
+        const errorMsg = document.getElementById('passwordError');
+        const form = document.getElementById('editForm');
+
+        newPassInput.addEventListener('input', function () {
+            if (this.value.length > 0) {
+                confirmPassGroup.style.display = 'block';
+                confirmPassInput.setAttribute('required', 'true');
+            } else {
+                confirmPassGroup.style.display = 'none';
+                confirmPassInput.removeAttribute('required');
+                confirmPassInput.value = '';
+                errorMsg.style.display = 'none';
+            }
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (newPassInput.value.length > 0) {
+                if (newPassInput.value !== confirmPassInput.value) {
+                    e.preventDefault();
+                    errorMsg.style.display = 'block';
+                    confirmPassInput.style.borderColor = '#e74c3c';
+                    confirmPassInput.focus();
+                } else {
+                    errorMsg.style.display = 'none';
+                }
+            }
+        });
+
+        confirmPassInput.addEventListener('input', function () {
+            if (this.value === newPassInput.value) {
+                errorMsg.style.display = 'none';
+                this.style.borderColor = '#2ecc71';
+            } else {
+                this.style.borderColor = '#eef2f7';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

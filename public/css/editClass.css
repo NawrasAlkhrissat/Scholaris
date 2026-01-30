@@ -1,0 +1,483 @@
+   /* --- Standard Theme Styles --- */
+        :root {
+            --primary-color: #2C3E50;
+            --accent-color: #3498DB;
+            --bg-light: #F4F6F9;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-gray: #666;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ... Navbar & Sidebar Styles ... */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            /* ظل خفيف */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            /* تثبيت الشريط عند التمرير */
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* --- تصميم الشعار (يسار) --- */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .nav-logo {
+            height: 45px;
+            /* ارتفاع ثابت */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- تصميم الروابط (وسط) --- */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- تصميم الأزرار (يمين) --- */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            /* المسافة بين زر الدخول وزر التسجيل */
+            align-items: center;
+        }
+
+        /* زر تسجيل الدخول (داكن) */
+        .btn-login {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #1a252f;
+            /* درجة أغمق قليلاً */
+            transform: translateY(-2px);
+        }
+
+        /* زر إنشاء حساب (سماوي - مميز) */
+        .btn-signup {
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+            /* ظل لتمييز الزر */
+        }
+
+        .btn-signup:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* --- 2. Layout Structure --- */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid #e1e1e1;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: calc(100vh - 70px);
+            position: sticky;
+            top: 70px;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background-color: #EBF5FB;
+            color: var(--accent-color);
+        }
+
+        .sidebar-link span {
+            margin-left: 10px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* --- Page Styles --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            border-top: 4px solid var(--accent-color);
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-grid-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Read Only Subjects */
+        .subjects-readonly-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 5px 0;
+        }
+
+        .subject-tag {
+            background-color: #EBF5FB;
+            color: var(--accent-color);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #d6eaf8;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .subject-tag::before {
+            content: '📚';
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+
+        /* --- SCHEDULE EDITOR STYLES --- */
+        .schedule-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .schedule-container {
+            min-height: 200px;
+        }
+
+        /* Period Row */
+        .period-row {
+            display: grid;
+            grid-template-columns: 0.5fr 1fr 1fr 1.5fr 1.5fr 0.5fr;
+            gap: 10px;
+            align-items: center;
+            background: #fcfcfc;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s;
+        }
+
+        .period-row label {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        /* Teacher Read-only Input Style */
+        .teacher-readonly {
+            background-color: #f8f9fa;
+            color: #666;
+            cursor: not-allowed;
+            border-color: #e9ecef;
+        }
+
+        .btn-add-period {
+            width: 100%;
+            padding: 12px;
+            background-color: #fff;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-add-period:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-delete-row {
+            background-color: #FDEDEC;
+            color: var(--danger-color);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete-row:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .form-actions {
+            margin-top: 30px;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-color);
+        }
+        .btn-cancel {
+            background-color: #aeafb09b;
+            color: #333;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #ddd;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .period-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                position: relative;
+                padding-top: 30px;
+            }
+
+            .period-num {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-weight: bold;
+            }
+
+            .period-action {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+        }

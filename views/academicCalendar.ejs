@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Calendar | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/academicCalendar.css">
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link active"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+
+            <main class="main-content">
+
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>Academic Calendar</h1>
+                        <p>Manage upcoming events, exams, and holidays.</p>
+                    </div>
+
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search events..."
+                                onkeyup="filterEvents()">
+                        </div>
+                        <% if(role == 'admin'){ %>
+                        <a href="/school/academic-calendar/add" class="btn-add"><span>➕</span> Add Event</a>
+                        <% } %>
+                    </div>
+                </header>
+
+                <div class="events-container" id="eventsContainer">
+                    <% if (academicCalendars && academicCalendars.length> 0) { %>
+                        <% academicCalendars.forEach(event=> { %>
+
+                            <% const startObj=new Date(event.startDate); const day=startObj.getDate(); const
+                                month=startObj.toLocaleString('default', { month: 'short' }); const
+                                year=startObj.getFullYear(); let badgeClass='type-default' ; const
+                                typeLower=event.eventType.toLowerCase(); if(typeLower.includes('exam'))
+                                badgeClass='type-exam' ; else if(typeLower.includes('holiday') ||
+                                typeLower.includes('vacation')) badgeClass='type-holiday' ; else
+                                if(typeLower.includes('meeting') || typeLower.includes('activity'))
+                                badgeClass='type-event' ; %>
+
+                                <div class="event-card" data-title="<%= event.title.toLowerCase() %>">
+
+                                    <div class="date-box">
+                                        <span class="date-day">
+                                            <%= day %>
+                                        </span>
+                                        <span class="date-month">
+                                            <%= month %>
+                                        </span>
+                                        <span class="date-year">
+                                            <%= year %>
+                                        </span>
+                                    </div>
+
+                                    <div class="event-details">
+
+                                        <div class="event-header">
+                                            <div class="header-content">
+                                                <h3 class="event-title">
+                                                    <%= event.title %>
+                                                </h3>
+                                                <span class="event-type-badge <%= badgeClass %>">
+                                                    <%= event.eventType %>
+                                                </span>
+                                            </div>
+
+                                            <% if(role==='admin' ){ %>
+                                                <div class="event-actions">
+                                                    <a href="/school/academic-calendar/edit/<%= event._id %>"
+                                                        class="btn-action btn-edit" title="Edit Event">
+                                                        ✏️
+                                                    </a>
+
+                                                    <form
+                                                        action="/school/academic-calendar/<%= event._id %>?_method=DELETE"
+                                                        method="POST" style="display:inline;" class="delete-form">
+                                                        <button type="submit" class="btn-action btn-delete"
+                                                            title="Delete Event"">
+                                                            🗑️
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <% } %>
+                                        </div>
+
+                                        <div class="event-meta">
+                                            <% if (event.startTime) { %>
+                                                <div class="meta-item">
+                                                    <span class="meta-icon">🕒</span>
+                                                    <span>
+                                                        <%= event.startTime %>
+                                                            <%= event.endTime ? ' - ' + event.endTime : '' %>
+                                                    </span>
+                                                </div>
+                                                <% } else { %>
+                                                    <div class="meta-item"><span class="meta-icon">🕒</span> <span>All
+                                                            Day</span></div>
+                                                    <% } %>
+
+                                                        <% if (event.endDate && new Date(event.endDate).getDate()!==day) { %>
+                                                            <div class="meta-item">
+                                                                <span class="meta-icon">📅</span>
+                                                                <span>Ends: <%= new
+                                                                        Date(event.endDate).toLocaleDateString() %>
+                                                                        </span>
+                                                            </div>
+                                                            <% } %>
+
+                                                                <% if (event.semester) { %>
+                                                                    <div class="meta-item"><span
+                                                                            class="meta-icon">🎓</span> <span>
+                                                                            <%= event.semester %>
+                                                                        </span></div>
+                                                                    <% } %>
+
+                                                                        <div class="meta-item"><span
+                                                                                class="meta-icon">🗓️</span> <span>
+                                                                                <%= event.academicYear %>
+                                                                            </span></div>
+                                        </div>
+
+                                        <% if (event.description) { %>
+                                            <div class="event-description">
+                                                <%= event.description %>
+                                            </div>
+                                            <% } %>
+
+                                    </div>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <div class="no-events">
+                                            <h3>No events found.</h3>
+                                            <p>The academic calendar is currently empty.</p>
+                                        </div>
+                                        <% } %>
+
+                                            <div id="noSearchMsg" class="no-search-result">
+                                                <p>No events found matching your search.</p>
+                                            </div>
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            function filterEvents() {
+                const input = document.getElementById('searchInput');
+                const filter = input.value.toLowerCase();
+                const container = document.getElementById('eventsContainer');
+                const cards = container.getElementsByClassName('event-card');
+                const noSearchMsg = document.getElementById('noSearchMsg');
+                let visibleCount = 0;
+
+                for (let i = 0; i < cards.length; i++) {
+                    const title = cards[i].getAttribute('data-title');
+                    if (title.indexOf(filter) > -1) {
+                        cards[i].style.display = "flex"; // Keep original flex layout
+                        visibleCount++;
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }
+
+                // Toggle "No Search Result" message
+                if (visibleCount === 0 && cards.length > 0) {
+                    noSearchMsg.style.display = 'block';
+                } else {
+                    noSearchMsg.style.display = 'none';
+                }
+            }
+            document.querySelectorAll('.delete-form').forEach(form => form.addEventListener('submit', (function (e) {
+                e.preventDefault();
+                return Swal.fire({
+                    title: 'Are you sure yoy want to delete this?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    } else {
+                        return;
+                    }
+                });
+            })));
+        </script>
+        <% if(action && action.includes('addedAcademicCalendar')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Successfully Added Event"
+                });
+            </script>
+            <% }else if(action && action.includes('updatedAcademicCalendar')){ %>
+                <script>
+                    const Toast1 = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast1.fire({
+                        icon: "success",
+                        title: "Successfully Updated Event"
+                    });
+                </script>
+                <% }else if(action && action.includes('deletedAcademicCalendar')){ %>
+                    <script>
+                        const Toast2 = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast2.fire({
+                            icon: "success",
+                            title: "Successfully Deleted Event"
+                        });
+                    </script>
+                    <% } %>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Class</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/addclass.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+                <main class="main-content">
+                    <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+                    <div class="form-container-centered">
+                        <h1>Add New Class</h1>
+
+                        <div class="card">
+                            <form action="/school/class" method="POST">
+                                <div class="form-grid-inner">
+
+                                    <div class="form-group">
+                                        <label>Class Name *</label>
+                                        <input type="text" name="className" class="form-input"
+                                            placeholder="e.g. Grade 10-A" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Capacity (Students) *</label>
+                                        <input type="number" name="capacity" class="form-input" placeholder="e.g. 30"
+                                            min="1" required>
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label>Responsible Teacher (Homeroom)</label>
+                                        <select name="responsibleTeacher" class="form-select">
+                                            <option value="" selected disabled>Select Teacher...</option>
+                                            <% teachers.forEach(teacher=> { %>
+                                                <option value="<%= teacher._id %>">
+                                                    <%= teacher.firstName %>
+                                                        <%= teacher.lastName %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-submit">Create Class</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
+            <script>
+                function toggleDropdown(listId) {
+                    const list = document.getElementById(listId);
+                    const isOpen = list.classList.contains('open');
+
+                    document.querySelectorAll('.checkboxes-list').forEach(el => el.classList.remove('open'));
+
+                    if (!isOpen) {
+                        list.classList.add('open');
+                    }
+                }
+
+                function toggleCheckbox(div) {
+                    if (event.target.tagName === 'INPUT') return; 
+
+                    const checkbox = div.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+
+                function updateSelectedText(listId, textId) {
+                    const list = document.getElementById(listId);
+                    const checkboxes = list.querySelectorAll('input[type="checkbox"]:checked');
+                    const textSpan = document.getElementById(textId);
+
+                    if (checkboxes.length === 0) {
+                        textSpan.innerText = "Select Subjects...";
+                        textSpan.style.color = "#666";
+                    } else if (checkboxes.length <= 3) {
+                        let names = [];
+                        checkboxes.forEach(cb => {
+                            names.push(cb.nextElementSibling.innerText);
+                        });
+                        textSpan.innerText = names.join(", ");
+                        textSpan.style.color = "#333";
+                    } else {
+                        textSpan.innerText = `${checkboxes.length} Subjects Selected`;
+                        textSpan.style.color = "var(--primary-color)";
+                        textSpan.style.fontWeight = "600";
+                    }
+                }
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('.multiselect-container')) {
+                        document.querySelectorAll('.checkboxes-list').forEach(el => el.classList.remove('open'));
+                    }
+                });
+            </script>
+
+</body>
+
+</html>

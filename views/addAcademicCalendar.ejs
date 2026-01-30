@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Calendar Event | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/addAcademicCalendar.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+
+            <main class="main-content">
+                <a href="/school/dashboard" class="back-link">
+                    <span>&larr;</span> Back to Dashboard
+                </a>
+                <div class="form-container-centered">
+                    <div class="page-header">
+                        <h1 class="page-title">Add New Event</h1>
+                    </div>
+
+                    <div class="card">
+                        <form action="/school/academic-calendar" method="post">
+
+                            <h3 class="section-title">Event Details</h3>
+
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Event Title *</label>
+                                    <input type="text" name="title" class="form-input"
+                                        placeholder="e.g. Midterm Exams, National Holiday" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Event Type *</label>
+                                    <select name="eventType" class="form-select" required>
+                                        <option value="" disabled selected>Select Type...</option>
+                                        <option value="Exam">Exam</option>
+                                        <option value="Holiday">Holiday</option>
+                                        <option value="Activity">Activity</option>
+                                        <option value="Meeting">Meeting</option>
+                                        <option value="Vacation">Vacation</option>
+                                        <option value="Break">Break</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Academic Year *</label>
+                                    <input type="text" name="academicYear" class="form-input"
+                                        placeholder="e.g. 2023-2024" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Semester (Optional)</label>
+                                    <select name="semester" class="form-select">
+                                        <option value="">None</option>
+                                        <option value="First Semester">First Semester</option>
+                                        <option value="Second Semester">Second Semester</option>
+                                        <option value="Summer Semester">Summer Semester</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <h3 class="section-title">Schedule & Timing</h3>
+
+                            <div class="form-grid-inner">
+                                <div class="form-group">
+                                    <label>Start Date *</label>
+                                    <input type="date" name="startDate" class="form-input" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>End Date (Optional)</label>
+                                    <input type="date" name="endDate" class="form-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Start Time (Optional)</label>
+                                    <input type="time" name="startTime" class="form-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>End Time (Optional)</label>
+                                    <input type="time" name="endTime" class="form-input">
+                                </div>
+                            </div>
+
+                            <h3 class="section-title">Additional Info</h3>
+
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Description</label>
+                                    <textarea name="description" class="form-textarea"
+                                        placeholder="Add more details about this event..." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit">Create Event</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+</body>
+
+</html>

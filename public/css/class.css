@@ -1,0 +1,478 @@
+    /* --- 1. Global Variables (Same Theme) --- */
+        :root {
+            --primary-color: #2C3E50;
+            --accent-color: #3498DB;
+            --bg-light: #F4F6F9;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-gray: #666;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar & Sidebar (Standard) --- */
+        .navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* ظل خفيف */
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    /* تثبيت الشريط عند التمرير */
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- تصميم الشعار (يسار) --- */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.nav-logo {
+    height: 45px;
+    /* ارتفاع ثابت */
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- تصميم الروابط (وسط) --- */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* --- تصميم الأزرار (يمين) --- */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    /* المسافة بين زر الدخول وزر التسجيل */
+    align-items: center;
+}
+
+/* زر تسجيل الدخول (داكن) */
+.btn-login {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #1a252f;
+    /* درجة أغمق قليلاً */
+    transform: translateY(-2px);
+}
+
+/* زر إنشاء حساب (سماوي - مميز) */
+.btn-signup {
+    background-color: var(--accent-color);
+    color: var(--white);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+    /* ظل لتمييز الزر */
+}
+
+.btn-signup:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* --- 2. Layout Structure --- */
+.dashboard-container {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--white);
+    border-right: 1px solid #e1e1e1;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100vh - 70px);
+    position: sticky;
+    top: 70px;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: #EBF5FB;
+    color: var(--accent-color);
+}
+
+.sidebar-link span {
+    margin-left: 10px;
+}
+.main-content { flex: 1; padding: 40px; overflow-y: auto; }
+
+        /* --- 2. Class Header Design --- */
+        .class-header-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid var(--accent-color);
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .teacher-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #EBF5FB;
+            color: var(--accent-color);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); display: block; }
+        .stat-label { font-size: 0.85rem; color: var(--text-gray); }
+
+        .btn-view-students {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-view-students:hover { background-color: var(--accent-color); transform: translateY(-2px); }
+
+        .btn-edit-class{
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-edit-class:hover { background-color: var(--accent-color); transform: translateY(-2px); }
+        /* --- 3. Subjects Grid (EXACT Design from previous request) --- */
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .subject-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subject-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08); border-color: var(--accent-color); }
+
+        .card-header {
+            background-color: var(--white);
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .subject-info h3 { font-size: 1.25rem; color: var(--primary-color); margin-bottom: 5px; }
+        .teacher-info { font-size: 0.85rem; color: var(--text-gray); }
+        .class-badge { background-color: #EBF5FB; color: var(--accent-color); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+
+        .card-body { padding: 20px 25px; flex: 1; }
+        .section-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: #aaa; font-weight: 700; margin-bottom: 15px; display: block; }
+
+        .assessment-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .assessment-tag {
+            display: flex; align-items: center; background-color: #f8f9fa; border: 1px solid #e9ecef;
+            padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; color: var(--text-dark); transition: 0.2s;
+        }
+        .assessment-tag:hover { background-color: var(--white); border-color: var(--accent-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .tag-name { margin-right: 8px; font-weight: 500; }
+        .tag-weight { background-color: var(--primary-color); color: var(--white); padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
+
+        /* --- 4. Distinctive Schedule Design (Column Layout) --- */
+       /* --- 4. Distinctive Schedule Design (Horizontal Layout) --- */
+        .schedule-wrapper {
+            display: flex;
+            flex-direction: column; /* ترتيب الأيام تحت بعضها كصفوف */
+            gap: 20px;
+            width: 100%;
+        }
+
+        .day-column {
+            width: 100%;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            /* تغيير مكان الخط الملون ليصبح على اليسار بدلاً من الأعلى ليتناسب مع الصفوف */
+            border-left: 6px solid var(--primary-color);
+            border-top: none; 
+            display: flex;
+            flex-direction: row; /* جعل عنوان اليوم بجانب الحصص */
+            align-items: stretch; /* تمديد ارتفاع العناصر لتتساوى */
+            overflow: hidden; /* لضمان عدم خروج المحتوى */
+            transition: transform 0.3s ease;
+        }
+
+        .day-column:hover {
+            transform: translateX(5px); /* حركة بسيطة عند المرور */
+        }
+
+        .day-header {
+            min-width: 140px; /* عرض ثابت لعنوان اليوم */
+            background-color: #f8f9fa;
+            border-right: 1px solid #eee; /* فاصل بين العنوان والحصص */
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            padding: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .day-lessons {
+            padding: 20px;
+            display: flex;
+            flex-direction: row; /* ترتيب الحصص بجانب بعضها أفقياً */
+            gap: 15px;
+            overflow-x: auto; /* السماح بالتمرير الأفقي إذا كثرت الحصص */
+            align-items: center;
+            flex: 1;
+            /* تخصيص شكل شريط التمرير للحصص */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) #f0f0f0;
+        }
+
+        /* تحسين شكل شريط التمرير في المتصفحات المستندة لـ Webkit */
+        .day-lessons::-webkit-scrollbar {
+            height: 6px;
+        }
+        .day-lessons::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+        .day-lessons::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
+
+        /* تصميم حصة الدرس (Lesson Card) */
+        .lesson-card {
+            min-width: 240px; /* عرض ثابت للحصة لضمان عدم انكماشها */
+            background-color: var(--white);
+            border: 1px solid #eef2f7;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            transition: 0.3s;
+            border-left: 3px solid var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .lesson-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+
+        .period-number {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.8rem;
+            color: #cbd5e0;
+            font-weight: 700;
+        }
+
+        .lesson-time {
+            display: inline-block;
+            background-color: #EBF5FB;
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .lesson-subject {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary-color); /* جعل اللون أغمق قليلاً للوضوح */
+            margin-bottom: 6px;
+        }
+
+        .lesson-teacher {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Mobile Responsiveness Updates --- */
+        @media (max-width: 900px) {
+            .dashboard-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; padding: 15px; }
+            .class-header-card { flex-direction: column; text-align: center; gap: 20px; }
+            .header-stats { flex-wrap: wrap; justify-content: center; }
+            
+            /* تحديث الموبايل للجدول الجديد */
+            .day-column { 
+                flex-direction: column; /* العودة للترتيب العمودي داخل اليوم للشاشات الصغيرة */
+            }
+            .day-header {
+                min-width: auto;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 10px;
+            }
+            .day-lessons {
+                width: 100%;
+                padding: 15px;
+                /* نبقي التمرير الأفقي للحصص لسهولة الاستخدام على الموبايل */
+            }
+            .lesson-card {
+                min-width: 200px; /* تصغير الكرت قليلاً للموبايل */
+            }
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        @media (max-width: 900px) {
+            .dashboard-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; padding: 15px; }
+            .class-header-card { flex-direction: column; text-align: center; gap: 20px; }
+            .header-stats { flex-wrap: wrap; justify-content: center; }
+            .schedule-wrapper { flex-direction: column; }
+            .day-column { width: 100%; border-top: none; border-left: 5px solid var(--primary-color); }
+        }
+    

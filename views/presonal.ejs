@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS - Personal Information</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/personal.css">
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link active"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+                <% if(role ==='admin' ){ %>
+                    <a href="/school/user" class="back-link">
+                        <span>&larr;</span> Back to All Teachers
+                    </a>
+                    <% } %>
+                        <section class="profile-card">
+
+                            <div class="profile-img-container">
+                                <img src="<%= user.profile.photo || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=3498DB&color=fff' %>"
+                                    alt="Teacher Profile" class="profile-img">
+                            </div>
+
+                            <div class="profile-details">
+
+                                <div class="profile-header-row">
+                                    <div>
+                                        <h1 class="profile-name">
+                                            <%= user.firstName %>
+                                                <%= user.lastName %>
+                                        </h1>
+                                        <span class="profile-role">
+                                            <%= user.role==='admin' ? 'Admin' : 'Teacher' %>
+                                        </span>
+                                    </div>
+
+                                    <a href="/school/editUser/<%= user._id %>" class="btn-edit-profile">
+                                        <span>✏️</span> Edit Profile
+                                    </a>
+                                </div>
+
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-icon">📧</span>
+                                        <span>
+                                            <%= user.email %>
+                                        </span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-icon">📞</span>
+                                        <span>
+                                            <%= user.phone || 'No phone provided' %>
+                                        </span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-icon">📅</span>
+                                        <span>Joined: <%= new Date(user.createdAt).toLocaleDateString('en-GB') %></span>
+                                    </div>
+                                </div>
+
+                                <div class="bio-box">
+                                    "<%= user.profile.bio || 'No bio available yet. Click edit to add your bio.' %>"
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                Assigned Classes
+                            </h2>
+                        </div>
+                            <div class="classes-grid">
+                                <% if (user.assingedClass && user.assingedClass.length> 0) { %>
+
+                                    <% user.assingedClass.forEach((cls)=> { %>
+                                        <div class="class-card">
+                                            <div>
+                                                <h3 class="class-name">
+                                                    <%= cls.className %>
+                                                </h3>
+                                                <div class="class-stats">
+                                                    <div class="stat-item">
+                                                        <span class="stat-value">
+                                                            <%= cls.students.length %>
+                                                        </span>
+                                                        <span class="stat-label">Students</span>
+                                                    </div>
+                                                    <div class="stat-item">
+                                                        <span class="stat-value">
+                                                            <%= cls.capacity %>
+                                                        </span>
+                                                        <span class="stat-label">Capacity</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="/school/class/<%= cls._id %>" class="btn-view-class">
+                                                View Class Details →
+                                            </a>
+                                        </div>
+                                        <% }); %>
+
+                                            <% } else { %>
+                                                <div
+                                                    style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; background: white; border-radius: 15px;">
+                                                    <p>You have not been assigned to any classes yet.</p>
+                                                </div>
+                                                <% } %>
+                            </div>
+                                <% if(schedule && schedule.length>0){ %>
+                                    <div class="section-header" style="margin-top: 40px;">
+                                        <h2 class="section-title">Weekly Schedule</h2>
+                                    </div>
+
+                                    <div class="schedule-card">
+                                        <table class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Day</th>
+                                                    <th>Time</th>
+                                                    <th>Subject</th>
+                                                    <th>Class</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <% let currentDay=null; %>
+                                                    <% schedule.forEach(item=> { %>
+
+                                                        <% if (currentDay !==item.day) { %>
+                                                            <tr class="day-header-row">
+                                                                <td colspan="4">
+                                                                    <%= item.day %>
+                                                                </td>
+                                                            </tr>
+                                                            <% currentDay=item.day; %>
+                                                                <% } %>
+
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td class="time-cell">
+                                                                            <%= item.startTime %> - <%= item.endTime %>
+                                                                        </td>
+                                                                        <td class="subject-cell">
+                                                                            <%= item.subjectName %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= item.class %>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <% } %>
+            </main>
+        </div>
+
+        <footer>
+            <p>All rights reserved &copy; 2025 - SMS School Management System</p>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <% if(action && action.includes('forbidden')){ %>
+            <script>
+                Swal.fire({
+                    icon: "info",
+                    title: "Oops... Forbidden Access",
+                    text: "You are not authorized to access this page.",
+                });
+            </script>
+            <% }else if(action && action.includes('notAllowed')){ %>
+                <script>
+                    Swal.fire({
+                        icon: "info",
+                        title: "Oops... Not Allowed",
+                        text: "You are not allowed to do this action.",
+                    });
+                </script>
+                <% }else if(action && action.includes('authenticated')){ %>
+                    <script>
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Signed in successfully"
+                        });
+                    </script>
+                    <% }else if(action && action.includes('unauthorized')){ %>
+                        <script>
+                            const Toast2 = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast2.fire({
+                                icon: "error",
+                                title: "Unauthorized Access"
+                            });
+                        </script>
+                        <% } else if(action && action.includes('updated')){ %>
+                            <script>
+                                const Toast3 = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                                Toast3.fire({
+                                    icon: "success",
+                                    title: "Successfully Updated"
+                                });
+                            </script>
+                            <% }else if(action && action.includes('deletedClass')){ %>
+                                <script>
+                                    const Toast4 = Swal.mixin({
+                                        toast: true,
+                                        position: "top-end",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.onmouseenter = Swal.stopTimer;
+                                            toast.onmouseleave = Swal.resumeTimer;
+                                        }
+                                    });
+                                    Toast4.fire({
+                                        icon: "success",
+                                        title: "Successfully Deleted Class"
+                                    });
+                                </script>
+                                <% } %>
+</body>
+
+</html>

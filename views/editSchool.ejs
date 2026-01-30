@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit School Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/editSchool.css">
+</head>
+
+<body>
+
+    <%- include('./partials/nav.ejs')  %>
+    <div class="dashboard-container">
+
+    <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link active"><span>🏫</span>My School</a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span><%= role == 'admin' ? 'All Subjects' : 'My Subjects'  %></span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+        <main class="main-content">
+            <a href="/school" class="back-link">
+                    <span>&larr;</span> Back to Profile
+                </a>
+            <h1 style="margin-bottom: 20px; color: var(--primary-color);">Edit School Profile</h1>
+
+            <form id="editSchoolForm">
+                <div class="edit-grid">
+                    <div class="card">
+                        <div class="gallery-header">
+                            <span style="font-weight: 600;">Manage Photos</span>
+                            <span style="font-size: 0.8rem; color: #666;">
+                                Click to select/deselect
+                            </span>
+                        </div>
+
+                        <div class="gallery-grid" id="galleryContainer"></div>
+
+                        <label for="fileInput" class="btn-upload">
+                            <span>📷</span> Add Photos
+                        </label>
+                        <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+
+                        <button type="button" id="deleteBtn" class="btn-delete-selected" style="display: none;">
+                            Delete Selected (<span id="selectedCount">0</span>)
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px;">Basic Info</h3>
+                        <div class="form-grid-inner">
+                            <div class="form-group">
+                                <label>School Name *</label>
+                                <input type="text" id="name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Manager Name *</label>
+                                <input type="text" id="managerName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" id="phone" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Address *</label>
+                                <input type="text" id="address" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save">💾 Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+        const schoolData = {
+            _id: '<%= school._id %>',
+            name: '<%= school.name %>',
+            managerName: '<%= school.managerName %>',
+            contacts: {
+                phone: '<%= school.contacts.phone %>',
+                email: '<%= school.contacts.email %>'
+            },
+            address: '<%= school.address %>',
+            photos: [],
+};  
+`<% school.photos.forEach(photo => {%>`
+    schoolData.photos.push('<%= photo %>');  
+    `<% }) %>`
+        document.getElementById('name').value = schoolData.name;
+        document.getElementById('managerName').value = schoolData.managerName;
+        document.getElementById('phone').value = schoolData.contacts.phone;
+        document.getElementById('email').value = schoolData.contacts.email;
+        document.getElementById('address').value = schoolData.contacts.address || schoolData.address;
+
+        const existingPhotos = (schoolData.photos || []).map(url => ({
+            id: crypto.randomUUID(),
+            type: 'existing',
+            url: url
+        }));
+
+        let newPhotos = [];
+        const selectedIds = new Set();
+
+        const container = document.getElementById('galleryContainer');
+        const fileInput = document.getElementById('fileInput');
+        const form = document.getElementById('editSchoolForm');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const selectedCount = document.getElementById('selectedCount');
+
+        function render() {
+            container.innerHTML = '';
+
+            const allPhotos = [...existingPhotos, ...newPhotos];
+
+            allPhotos.forEach(photo => {
+                const div = document.createElement('div');
+                div.className = 'photo-item';
+
+                if (photo.type === 'new') {
+                    div.classList.add('new-upload');
+                }
+
+                if (selectedIds.has(photo.id)) {
+                    div.classList.add('marked-delete');
+                }
+
+                const img = document.createElement('img');
+                img.src = photo.type === 'new' ? photo.preview : photo.url;
+                img.alt = 'School Photo';
+
+                div.appendChild(img);
+                div.onclick = () => toggleSelection(photo.id);
+
+                container.appendChild(div);
+            });
+
+            updateDeleteButton();
+        }
+
+        function toggleSelection(id) {
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else {
+                selectedIds.add(id);
+            }
+            render();
+        }
+
+        function updateDeleteButton() {
+            const count = selectedIds.size;
+            deleteBtn.style.display = count > 0 ? 'block' : 'none';
+            selectedCount.textContent = count;
+        }
+
+        function deleteSelected() {
+            for (let i = existingPhotos.length - 1; i >= 0; i--) {
+                if (selectedIds.has(existingPhotos[i].id)) {
+                    existingPhotos.splice(i, 1);
+                }
+            }
+            for (let i = newPhotos.length - 1; i >= 0; i--) {
+                if (selectedIds.has(newPhotos[i].id)) {
+                    URL.revokeObjectURL(newPhotos[i].preview);
+                    newPhotos.splice(i, 1);
+                }
+            }
+
+            selectedIds.clear();
+            render();
+        }
+
+        deleteBtn.addEventListener('click', deleteSelected);
+
+        fileInput.addEventListener('change', e => {
+            const files = Array.from(e.target.files);
+
+            files.forEach(file => {
+                newPhotos.push({
+                    id: crypto.randomUUID(),
+                    type: 'new',
+                    file: file,
+                    preview: URL.createObjectURL(file)
+                });
+            });
+
+            fileInput.value = '';
+            render();
+        });
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('.btn-save');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+
+            try {
+                const formData = new FormData();
+
+                formData.append('name', document.getElementById('name').value);
+                formData.append('managerName', document.getElementById('managerName').value);
+                formData.append('phone', document.getElementById('phone').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('address', document.getElementById('address').value);
+
+                const remainingOldPhotos = existingPhotos.map(p => p.url);
+                formData.append('remainingPhotos', JSON.stringify(remainingOldPhotos));
+
+                newPhotos.forEach(photo => {
+                    formData.append('photos', photo.file);
+                });
+
+                const response = await fetch(`/school/${schoolData._id}?_method=PUT`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Failed to update school');
+                }
+                const result = await response.json();
+                window.location = `/school`;
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Failed to update school please try again later",
+                });
+            }
+        });
+
+        render();
+    </script>
+</body>
+
+</html>

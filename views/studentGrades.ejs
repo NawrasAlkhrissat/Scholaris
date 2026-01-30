@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grades | SMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/studentGrades.css">
+</head>
+
+<body>
+    <% let count = 0;
+     if(studentGrades && studentGrades.length> 0){
+    studentGrades.forEach(grade=> {
+    let sum = grade.subject.gradeDistribution.length;
+    if(sum == grade.grades.length){count++} 
+    })
+    console.log(count)
+    }%>
+    <%- include('./partials/nav.ejs') %>
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+            <main class="main-content">
+
+                <a href="/school/student/<%= student._id %>" class="back-link">
+                    <span>&larr;</span> Back to Profile
+                </a>
+
+                <header class="page-header">
+                    <div class="header-title">
+                        <h1>Detailed Grades</h1>
+                        <p>Academic Report for <strong>
+                                <%= student.name %>
+                            </strong></p>
+                    </div>
+                    <div class="action-wrapper">
+                        <% if(role == 'admin' || userId == student.currentClass.responsibleTeacher._id){ %>
+                        <% if(studentGrades && studentGrades.length> 0){ %>
+                            <a href="/teacher/certificate/<%= student._id %>"
+                                class="btn-certificate <%= count >= student.currentClass.subjects.length ? '' : 'disabled' %>">
+                                <% console.log(student.currentClass.subjects.length);%>
+                                <span>🎓</span> Generate Certificate
+                            </a>
+
+                            <% if(studentGrades.length < student.currentClass.subjects.length){ %>
+                                <span class="disabled-hint">
+                                    Grades for all subjects have not yet been released.
+                                </span>
+                                <% } %>
+                                    <% } %>
+                                    <% } %>
+                    </div>
+                </header>
+
+                <div class="grades-grid">
+                    <% if(studentGrades && studentGrades.length> 0){ %>
+
+                        <% studentGrades.forEach(grade=> { %>
+                            <div class="grade-card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="subject-name">
+                                            <%= grade.subject.subjectName %>
+                                        </div>
+                                        <div class="teacher-name">
+                                            <span>👨‍🏫</span>
+                                            <%= grade.teacher.firstName %>
+                                                <%= grade.teacher.lastName %>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 1.5rem; opacity: 0.5;">📖</div>
+                                </div>
+
+                                <div class="card-body">
+                                    <table class="assessment-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Assessment</th>
+                                                <th>Date</th>
+                                                <th style="text-align: right;">Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% grade.grades.forEach(g=> { %>
+                                                <tr>
+                                                    <td><span style="font-weight: 500;">
+                                                            <%= g.assesmintType %>
+                                                        </span></td>
+                                                    <td><span class="grade-date">
+                                                            <%= new Date(g.date).toLocaleDateString('en-GB') %>
+                                                        </span></td>
+                                                    <td style="text-align: right;"><span class="grade-value">
+                                                            <%= g.gradeValue %>
+                                                        </span></td>
+                                                    <% if(role==='admin' || userId===grade.teacher._id.toString() ){ %>
+                                                        <td>
+                                                            <form
+                                                                action="/teacher/greades/<%= grade._id %>?_method=DELETE"
+                                                                method="post" class="delete-form">
+                                                                <input type="hidden" name="assesmintType"
+                                                                    value="<%= g.assesmintType %>">
+                                                                <button type="submit" class="btn-delete">Delete</button>
+                                                            </form>
+                                                        </td>
+                                                        <% } %>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                    <% if (grade.grades.length===0) { %>
+                                        <p
+                                            style="text-align: center; color: #ccc; margin-top: 15px; font-size: 0.9rem;">
+                                            No grades recorded yet.</p>
+                                        <% } %>
+                                </div>
+
+                                <div class="card-footer">
+                                    <span class="total-label">Total Grade</span>
+                                    <span class="total-score">
+                                        <%= gradesSum[grade.subject.subjectName] || 0 %>
+                                    </span>
+                                </div>
+                            </div>
+                            <% }); %>
+
+                                <% } else { %>
+                                    <p
+                                        style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; min-height: 50vh; color: #bdc3c7; font-size: 2rem; font-weight: 700; text-align: center;">
+                                        📊 No grades recorded yet.
+                                    </p>
+                                    <% } %>
+                </div>
+
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.querySelectorAll('.delete-form').forEach(form => form.addEventListener('submit', (function (e) {
+                e.preventDefault();
+                return Swal.fire({
+                    title: 'Are you sure yoy want to delete this?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    } else {
+                        return;
+                    }
+                });
+            })));
+        </script>
+        <% if(action && action.includes("gradeDeleted")){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Successfully Deleted"
+                });
+            </script>
+            <% } %>
+
+</body>
+
+</html>

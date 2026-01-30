@@ -1,0 +1,510 @@
+ /* --- 1. Global Variables --- */
+ :root {
+     --primary-color: #2C3E50;
+     --accent-color: #3498DB;
+     --bg-light: #F4F6F9;
+     --white: #ffffff;
+     --text-dark: #333;
+     --text-gray: #666;
+     --danger-color: #e74c3c;
+     --success-color: #27ae60;
+     --warning-color: #f39c12;
+     --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+     --sidebar-width: 260px;
+ }
+
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+
+ body {
+     font-family: 'Poppins', sans-serif;
+     background-color: var(--bg-light);
+     color: var(--text-dark);
+     min-height: 100vh;
+     display: flex;
+     flex-direction: column;
+ }
+
+ .navbar {
+     background-color: var(--white);
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+     /* ظل خفيف */
+     padding: 15px 50px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     position: sticky;
+     /* تثبيت الشريط عند التمرير */
+     top: 0;
+     z-index: 1000;
+ }
+
+ /* --- تصميم الشعار (يسار) --- */
+ .nav-brand {
+     display: flex;
+     align-items: center;
+     gap: 15px;
+     text-decoration: none;
+     color: var(--primary-color);
+ }
+
+ .nav-logo {
+     height: 45px;
+     /* ارتفاع ثابت */
+     width: auto;
+     object-fit: contain;
+ }
+
+ .brand-text {
+     font-size: 1.5rem;
+     font-weight: 700;
+     letter-spacing: -0.5px;
+     font-family: 'Poppins', sans-serif;
+ }
+
+ /* --- تصميم الروابط (وسط) --- */
+ .nav-links {
+     display: flex;
+     gap: 30px;
+     align-items: center;
+ }
+
+ .nav-link {
+     text-decoration: none;
+     color: var(--primary-color);
+     font-weight: 500;
+     transition: color 0.3s;
+     font-size: 0.95rem;
+     font-family: 'Poppins', sans-serif;
+ }
+
+ .nav-link:hover {
+     color: var(--accent-color);
+ }
+
+ /* --- تصميم الأزرار (يمين) --- */
+ .nav-buttons {
+     display: flex;
+     gap: 15px;
+     /* المسافة بين زر الدخول وزر التسجيل */
+     align-items: center;
+ }
+
+ /* زر تسجيل الدخول (داكن) */
+ .btn-login {
+     background-color: var(--primary-color);
+     color: var(--white);
+     padding: 10px 25px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: 600;
+     font-size: 0.9rem;
+     font-family: 'Poppins', sans-serif;
+     transition: all 0.3s ease;
+ }
+
+ .btn-login:hover {
+     background-color: #1a252f;
+     /* درجة أغمق قليلاً */
+     transform: translateY(-2px);
+ }
+
+ /* زر إنشاء حساب (سماوي - مميز) */
+ .btn-signup {
+     background-color: var(--accent-color);
+     color: var(--white);
+     padding: 10px 25px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: 600;
+     font-size: 0.9rem;
+     font-family: 'Poppins', sans-serif;
+     transition: all 0.3s ease;
+     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+     /* ظل لتمييز الزر */
+ }
+
+ .btn-signup:hover {
+     background-color: var(--primary-color);
+     transform: translateY(-2px);
+ }
+
+ /* --- 2. Layout Structure --- */
+ .dashboard-container {
+     display: flex;
+     flex: 1;
+ }
+
+ /* Sidebar */
+ .sidebar {
+     width: var(--sidebar-width);
+     background-color: var(--white);
+     border-right: 1px solid #e1e1e1;
+     padding: 30px 20px;
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+     height: calc(100vh - 70px);
+     position: sticky;
+     top: 70px;
+ }
+
+ .sidebar-title {
+     font-size: 0.85rem;
+     text-transform: uppercase;
+     color: #999;
+     font-weight: 700;
+     margin-bottom: 15px;
+     letter-spacing: 1px;
+ }
+
+ .sidebar-link {
+     display: flex;
+     align-items: center;
+     padding: 12px 15px;
+     text-decoration: none;
+     color: var(--text-gray);
+     font-weight: 500;
+     border-radius: 10px;
+     transition: all 0.3s;
+ }
+
+ .sidebar-link:hover,
+ .sidebar-link.active {
+     background-color: #EBF5FB;
+     color: var(--accent-color);
+ }
+
+ .sidebar-link span {
+     margin-left: 10px;
+ }
+
+ .main-content {
+     flex: 1;
+     padding: 40px;
+     overflow-y: auto;
+ }
+
+ /* --- Header & Search Bar --- */
+ .page-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 30px;
+     flex-wrap: wrap;
+     gap: 20px;
+ }
+
+ .header-title h1 {
+     font-size: 1.8rem;
+     color: var(--primary-color);
+     font-weight: 700;
+ }
+
+ .header-title p {
+     color: var(--text-gray);
+     font-size: 0.95rem;
+ }
+
+ .header-actions {
+     display: flex;
+     align-items: center;
+     gap: 15px;
+     flex-grow: 1;
+     justify-content: flex-end;
+ }
+
+ .search-box {
+     position: relative;
+     width: 300px;
+ }
+
+ .search-input {
+     width: 100%;
+     padding: 10px 20px 10px 40px;
+     border: 1px solid #eee;
+     border-radius: 50px;
+     background-color: var(--white);
+     font-family: 'Poppins', sans-serif;
+     transition: 0.3s;
+     box-shadow: var(--shadow);
+ }
+
+ .search-input:focus {
+     outline: none;
+     border-color: var(--accent-color);
+ }
+
+ .search-icon {
+     position: absolute;
+     left: 15px;
+     top: 50%;
+     transform: translateY(-50%);
+     color: #aaa;
+ }
+
+ .btn-add {
+     background-color: var(--accent-color);
+     color: white;
+     padding: 10px 25px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: 600;
+     display: inline-flex;
+     align-items: center;
+     gap: 8px;
+     transition: 0.3s;
+     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+ }
+
+ .btn-add:hover {
+     background-color: #2980b9;
+     transform: translateY(-2px);
+ }
+
+ /* --- Calendar Events Layout --- */
+ .events-container {
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+     max-width: 900px;
+     margin: 0 auto;
+ }
+
+ .event-card {
+     background: var(--white);
+     border-radius: 16px;
+     padding: 25px;
+     box-shadow: var(--shadow);
+     display: flex;
+     gap: 25px;
+     align-items: flex-start;
+     transition: transform 0.3s;
+     border-left: 5px solid var(--accent-color);
+     position: relative;
+     overflow: hidden;
+ }
+
+ .event-card:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+ }
+
+ /* Date Box */
+ .date-box {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     min-width: 80px;
+     padding: 10px;
+     background-color: #f8f9fa;
+     border-radius: 12px;
+     border: 1px solid #eee;
+     text-align: center;
+ }
+
+ .date-day {
+     font-size: 1.8rem;
+     font-weight: 700;
+     color: var(--primary-color);
+     line-height: 1;
+ }
+
+ .date-month {
+     font-size: 0.85rem;
+     text-transform: uppercase;
+     color: var(--accent-color);
+     font-weight: 600;
+     margin-top: 5px;
+ }
+
+ .date-year {
+     font-size: 0.75rem;
+     color: #999;
+ }
+
+ /* Details & Header */
+ .event-details {
+     flex: 1;
+ }
+
+ .event-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: flex-start;
+     margin-bottom: 10px;
+ }
+
+ .header-content {
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+ }
+
+ .event-title {
+     font-size: 1.2rem;
+     font-weight: 700;
+     color: var(--text-dark);
+     margin: 0;
+ }
+
+ .event-type-badge {
+     font-size: 0.75rem;
+     font-weight: 600;
+     padding: 4px 12px;
+     border-radius: 20px;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
+     width: fit-content;
+ }
+
+ /* Dynamic Colors */
+ .type-exam {
+     background-color: #FDEDEC;
+     color: #e74c3c;
+ }
+
+ .type-holiday {
+     background-color: #E8F8F5;
+     color: #27ae60;
+ }
+
+ .type-event {
+     background-color: #EBF5FB;
+     color: #3498DB;
+ }
+
+ .type-default {
+     background-color: #f4f6f7;
+     color: #7f8c8d;
+ }
+
+ /* Action Buttons (Edit/Delete) */
+ .event-actions {
+     display: flex;
+     gap: 8px;
+     margin-left: 15px;
+ }
+
+ .btn-action {
+     width: 32px;
+     height: 32px;
+     border-radius: 8px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     text-decoration: none;
+     border: none;
+     font-size: 1rem;
+     cursor: pointer;
+     transition: 0.2s;
+ }
+
+ .btn-edit {
+     background-color: #FEF9E7;
+     color: var(--warning-color);
+ }
+
+ .btn-edit:hover {
+     background-color: var(--warning-color);
+     color: white;
+ }
+
+ .btn-delete {
+     background-color: #FDEDEC;
+     color: var(--danger-color);
+ }
+
+ .btn-delete:hover {
+     background-color: var(--danger-color);
+     color: white;
+ }
+
+ /* Metadata */
+ .event-meta {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 15px;
+     font-size: 0.85rem;
+     color: #666;
+     margin-bottom: 15px;
+     margin-top: 5px;
+ }
+
+ .meta-item {
+     display: flex;
+     align-items: center;
+     gap: 5px;
+ }
+
+ .meta-icon {
+     font-size: 1rem;
+ }
+
+ .event-description {
+     font-size: 0.95rem;
+     color: #555;
+     line-height: 1.6;
+     background-color: #fafafa;
+     padding: 15px;
+     border-radius: 8px;
+ }
+
+ .no-events {
+     text-align: center;
+     padding: 50px;
+     color: #999;
+     background: white;
+     border-radius: 16px;
+     box-shadow: var(--shadow);
+ }
+
+ .no-search-result {
+     display: none;
+     text-align: center;
+     padding: 20px;
+     color: #999;
+ }
+
+ @media (max-width: 768px) {
+     .dashboard-container {
+         flex-direction: column;
+     }
+
+     .sidebar {
+         width: 100%;
+         height: auto;
+         position: static;
+     }
+
+     .header-actions {
+         width: 100%;
+         justify-content: space-between;
+         margin-top: 10px;
+     }
+
+     .search-box {
+         width: 100%;
+     }
+
+     .event-card {
+         flex-direction: column;
+         gap: 15px;
+     }
+
+     .date-box {
+         width: 100%;
+         flex-direction: row;
+         justify-content: flex-start;
+         gap: 10px;
+         padding: 10px 20px;
+     }
+
+     .date-day {
+         font-size: 1.2rem;
+     }
+ }

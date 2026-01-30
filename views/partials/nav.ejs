@@ -1,0 +1,23 @@
+<% layout %>
+<nav class="navbar">
+    <a href="/" class="nav-brand">
+        <img src="/images/logo.jpg" alt="SMS Logo" class="nav-logo">
+        <span style="font-weight: bold; color: #0056b3;">Scholaris</span>
+        <span class="brand-text">AL-Nawras High School</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/learn-more" class="nav-link">About</a>
+        <a href="/contact" class="nav-link">Contact</a>
+    </div>
+
+    <div class="nav-buttons">
+        <% if(!isAuthenticated){ %>
+        <a href="/auth/login" class="btn-login">Login</a>
+        <!-- <a href="/auth/signup" class="btn-signup">Sign Up</a> -->
+        <% }else {%>
+            <a href="/auth/logout" class="btn-login">Logout</a>
+            <% } %>
+    </div>
+</nav>

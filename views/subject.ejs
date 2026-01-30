@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= subject.subjectName %> | Details
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/subject.css">
+</head>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+        <div class="dashboard-container">
+
+            <aside class="sidebar">
+                <div class="sidebar-title">Main Menu</div>
+                <a href="/school/user/<%= userId %>" class="sidebar-link"><span>👤</span><span>My
+                        Profile</span></a>
+                <a href="/school" class="sidebar-link"><span>🏫</span><span>My School</span></a>
+                <a href="/school/subject" class="sidebar-link active"><span>📚</span><span>
+                        <%= role=='admin' ? 'All Subjects' : 'My Subjects' %>
+                    </span></a>
+                <a href="/school/academic-calendar" class="sidebar-link"><span>📅</span><span>Calendar</span></a>
+            </aside>
+
+            <main class="main-content">
+
+                <div id="page-context" data-subject-id="<%= subject._id %>"
+                    data-teacher-id="<%= subject.teacher.firstName %> <%= subject.teacher.lastName %>"></div>
+
+                <div class="subject-header">
+                    <div>
+                        <h1>
+                            <%= subject.subjectName %>
+                        </h1>
+                        <div class="header-meta">
+                            Class: <strong>
+                                <%= subject.class.className %>
+                            </strong> &nbsp;|&nbsp;
+                            Teacher: <strong>
+                                <%= subject.teacher.firstName %>
+                                    <%= subject.teacher.lastName %>
+                            </strong>
+                        </div>
+
+                        <div class="assessment-list">
+                            <% subject.gradeDistribution.forEach(g=> { %>
+                                <div class="assessment-tag">
+                                    <span>
+                                        <%= g.assesmintType %>
+                                    </span>
+                                    <span class="tag-weight">
+                                        <%= g.weight %>%
+                                    </span>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-edit-dist" onclick="openDistributionModal()">
+                        <span>✏️</span> Edit Distribution
+                    </button>
+                </div>
+
+                <div class="action-tabs">
+                    <button class="tab-btn active" onclick="showSection('view')">👥 View Students</button>
+                    <% if(userId===subject.teacher._id.toString()){ %>
+                        <button class="tab-btn" onclick="showSection('attendance')">📅 Take Attendance</button>
+                        <button class="tab-btn" onclick="showSection('remark')">📝 Add Remark</button>
+                        <button class="tab-btn" onclick="showSection('grades')">📊 Upload Grades</button>
+                        <% } %>
+                </div>
+
+                <div id="section-view" class="content-section active">
+                    <h3 style="margin-bottom: 20px;">Class Students</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% students.forEach(s=> { %>
+                                <tr>
+                                    <td><strong>
+                                            <%= s.name %>
+                                        </strong></td>
+                                    <td><a href="/school/student/<%= s._id %>" class="btn-view-profile">View Profile
+                                            &rarr;</a></td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="section-attendance" class="content-section">
+                    <h3 style="margin-bottom: 20px;">Take Attendance</h3>
+                    <form id="attendanceForm"
+                        action="/teacher/attendance/bulk-update/<%= subject._id %>/<%= subject.class._id %>?_method=PUT"
+                        method="POST">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% students.forEach(s=> { %>
+                                    <tr class="student-row" data-student-id="<%= s._id %>">
+                                        <td>
+                                            <%= s.name %>
+                                        </td>
+                                        <td>
+                                            <select class="form-select attendance-select">
+                                                <option value="Not Taken" selected>Select Status...</option>
+                                                <option value="present">✅ Present</option>
+                                                <option value="absent">❌ Absent</option>
+                                                <option value="late">⚠️ Late</option>
+                                                <option value="excused">📩 Excused</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <div class="form-footer"><button type="submit" class="btn-submit">Submit Attendance</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="section-remark" class="content-section">
+                    <h3 style="margin-bottom: 20px;">Student Remarks</h3>
+                    <form id="remarksForm"
+                        action="/teacher/remarks/bulk-update/<%= subject._id %>/<%= subject.class._id %>?_method=PUT"
+                        method="POST">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;">Student Name</th>
+                                    <th>Note / Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% students.forEach(s=> { %>
+                                    <tr class="student-row" data-student-id="<%= s._id %>">
+                                        <td>
+                                            <%= s.name %>
+                                        </td>
+                                        <td><textarea class="form-textarea remark-input"
+                                                placeholder="Write a remark..."></textarea></td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <div class="form-footer"><button type="submit" class="btn-submit">Save Remarks</button></div>
+                    </form>
+                </div>
+
+                <div id="section-grades" class="content-section">
+                    <h3 style="margin-bottom: 20px;">Upload Grades</h3>
+                    <form id="gradesForm"
+                        action="/teacher/grades/bulk-update/<%= subject._id %>/<%= subject.class._id %>?_method=PUT"
+                        method="POST">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Student Name</th>
+                                    <th style="width: 35%;">Assessment Type</th>
+                                    <th style="width: 40%;">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% students.forEach(s=> { %>
+                                    <tr class="student-row" data-student-id="<%= s._id %>">
+                                        <td>
+                                            <%= s.name %>
+                                        </td>
+                                        <td>
+                                            <select class="form-select assessment-select"
+                                                onchange="updateValidation(this)">
+                                                <option value="" selected disabled>Select Exam...</option>
+                                                <% subject.gradeDistribution.forEach(g=> { %>
+                                                    <option value="<%= g.assesmintType %>"
+                                                        data-weight="<%= g.weight %>">
+                                                        <%= g.assesmintType %> (Max: <%= g.weight %>)
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div style="position: relative;">
+                                                <input type="number" class="form-input grade-input" placeholder="Score"
+                                                    min="0" step="0.01" disabled oninput="validateGrade(this)">
+                                                <span class="error-msg"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <div class="form-footer"><button type="submit" class="btn-submit">Upload Grades</button></div>
+                    </form>
+                </div>
+                <% if(role==='admin' ){ %>
+                    <form action="/school/subject/<%= subject._id %>?_method=DELETE" method="POST" id="deleteForm">
+                        <input type="hidden" name="teacherId" value="<%= subject.teacher._id %>">
+                        <input type="hidden" name="classId" value="<%= subject.class._id %>">
+                        <button type="submit" class="btn-delete"><span>🗑️</span> Delete Subject</button>
+                    </form>
+                    <% } %>
+            </main>
+        </div>
+
+        <div id="distModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Grade Distribution</h3>
+                    <span class="close-btn" onclick="closeDistributionModal()">&times;</span>
+                </div>
+
+                <form action="/school/subject/<%= subject._id %>?_method=PUT" method="POST" id="distForm">
+                    <div id="distRowsContainer" class="dist-rows-container">
+
+                        <% subject.gradeDistribution.forEach((g, index)=> { %>
+                            <div class="dist-row">
+                                <input type="text" name="distribution[<%= index %>][assesmintType]"
+                                    class="form-input assesment-input" value="<%= g.assesmintType %>"
+                                    placeholder="e.g. Midterm" required>
+
+                                <input type="number" name="distribution[<%= index %>][weight]"
+                                    class="form-input weight-input" value="<%= g.weight %>" placeholder="Weight" min="1"
+                                    max="100" required>
+
+                                <button type="button" class="btn-delete-row" onclick="removeRow(this)">🗑️</button>
+                            </div>
+                            <% }) %>
+
+                    </div>
+
+                    <button type="button" class="btn-add-row" onclick="addNewRow()">+ Add New Assessment</button>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeDistributionModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            const context = document.getElementById('page-context');
+            const subjectId = context.getAttribute('data-subject-id');
+            const teacherId = context.getAttribute('data-teacher-id');
+
+            function showSection(sectionName) {
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('section-' + sectionName).classList.add('active');
+                const btns = document.querySelectorAll('.tab-btn');
+                if (sectionName === 'view') btns[0].classList.add('active');
+                if (sectionName === 'attendance') btns[1].classList.add('active');
+                if (sectionName === 'remark') btns[2].classList.add('active');
+                if (sectionName === 'grades') btns[3].classList.add('active');
+            }
+
+            function updateValidation(selectElement) {
+                const row = selectElement.closest('tr');
+                const gradeInput = row.querySelector('.grade-input');
+                const errorMsg = row.querySelector('.error-msg');
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const weight = selectedOption.getAttribute('data-weight');
+                if (weight) {
+                    gradeInput.disabled = false; gradeInput.max = weight; gradeInput.placeholder = `Max: ${weight}`; gradeInput.value = ''; errorMsg.textContent = '';
+                } else { gradeInput.disabled = true; }
+            }
+
+            function validateGrade(inputElement) {
+                const maxWeight = parseFloat(inputElement.max); const value = parseFloat(inputElement.value); const errorSpan = inputElement.nextElementSibling;
+                errorSpan.textContent = ''; inputElement.style.borderColor = '#ddd';
+                if (isNaN(value)) return;
+                if (value < 0) { errorSpan.textContent = 'Error: < 0'; inputElement.style.borderColor = 'var(--danger-color)'; }
+                else if (value > maxWeight) { errorSpan.textContent = `Error: > ${maxWeight}`; inputElement.style.borderColor = 'var(--danger-color)'; }
+                else if (value > 100) { errorSpan.textContent = 'Error: > 100'; inputElement.style.borderColor = 'var(--danger-color)'; }
+            }
+
+            async function sendData(url, data) {
+
+                try {
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Data sent successfully!",
+                            icon: "success",
+                            draggable: true,
+                            showConfirmButton: true
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        const err = await response.text();
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: 'Please try again. If the problem persists, contact your administrator.'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong!",
+                        footer: 'Please try again. If the problem persists, contact your administrator.'
+                    });
+                }
+            }
+            document.getElementById('attendanceForm').addEventListener('submit', function (e) {
+                e.preventDefault(); const rows = this.querySelectorAll('.student-row'); const payload = [];
+                rows.forEach(row => {
+                    const studentId = row.getAttribute('data-student-id'); const status = row.querySelector('.attendance-select').value;
+                    if (status && status !== 'Not Taken') { payload.push({ studentId, status }); }
+                });
+                if (payload.length === 0) {
+                    Swal.fire({
+                        title: "Select attendance for at least one student.",
+                        icon: "info",
+                        draggable: true
+                    });
+                    return;
+                }
+                sendData(this.action, payload);
+            });
+
+            document.getElementById('remarksForm').addEventListener('submit', function (e) {
+                e.preventDefault(); const rows = this.querySelectorAll('.student-row'); const payload = [];
+                rows.forEach(row => {
+                    const studentId = row.getAttribute('data-student-id'); const remark = row.querySelector('.remark-input').value.trim();
+                    if (remark) { payload.push({ studentId, subject: subjectId, teacher: teacherId, remark }); }
+                });
+                if (payload.length === 0) {
+                    Swal.fire({
+                        title: "Enter remarks for at least one student.",
+                        icon: "info",
+                        draggable: true
+                    })
+                    return;
+                }
+                sendData(this.action, payload);
+            });
+
+            document.getElementById('gradesForm').addEventListener('submit', function (e) {
+                e.preventDefault(); const rows = this.querySelectorAll('.student-row'); const payload = []; let err = false;
+                rows.forEach(row => {
+                    const studentId = row.getAttribute('data-student-id'); const type = row.querySelector('.assessment-select').value; const valInput = row.querySelector('.grade-input'); const val = parseFloat(valInput.value);
+                    if (!valInput.disabled && valInput.value !== '') { if (val < 0 || val > parseFloat(valInput.max)) { err = true; valInput.style.borderColor = 'red'; } }
+                    if (type && valInput.value !== '' && !valInput.disabled) { payload.push({ studentId, grades: [{ assesmintType: type, gradeValue: val, date: new Date().toISOString() }] }); }
+                });
+                if (err) {
+                    Swal.fire({
+                        title: "Enter a valid grade.",
+                        icon: "info",
+                        draggable: true
+                    })
+                    return;
+                }
+                if (payload.length === 0) {
+                    Swal.fire({
+                        title: "Enter a grade for at least one student.",
+                        icon: "info",
+                        draggable: true
+                    })
+                    return;
+                }
+                sendData(this.action, payload);
+            });
+
+            const modal = document.getElementById('distModal');
+            const rowsContainer = document.getElementById('distRowsContainer');
+
+            function openDistributionModal() {
+                modal.style.display = 'flex';
+            }
+
+            function closeDistributionModal() {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    closeDistributionModal();
+                }
+            }
+
+            function removeRow(btn) {
+                const row = btn.parentElement;
+                row.remove();
+            }
+
+            function addNewRow() {
+                const index = Date.now();
+                const newRow = document.createElement('div');
+                newRow.classList.add('dist-row');
+                newRow.innerHTML = `
+                <input type="text" name="distribution[${index}][assesmintType]" 
+                       class="form-input assesment-input" placeholder="e.g. Quiz" required>
+                <input type="number" name="distribution[${index}][weight]" 
+                       class="form-input weight-input" placeholder="Weight" min="1" max="100" required>
+                <button type="button" class="btn-delete-row" onclick="removeRow(this)">🗑️</button>
+            `;
+                rowsContainer.appendChild(newRow);
+            }
+            document.getElementById('distForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const rows = this.querySelectorAll('.dist-row');
+                const gradeDistribution = [];
+                let weightSum = 0;
+                rows.forEach(row => {
+                    const type = row.querySelector('.assesment-input').value;
+                    const weight = parseFloat(row.querySelector('.weight-input').value);
+                    weightSum += weight;
+                    if (type && weight) { gradeDistribution.push({ assesmintType: type, weight }); }
+                });
+                if (gradeDistribution.length === 0) {
+                    Swal.fire({
+                        title: "Enterat least one distribution.",
+                        icon: "info",
+                        draggable: true
+                    })
+                    return;
+                }
+                if (weightSum !== 100) {
+                    Swal.fire({
+                        title: "Weight sum must be 100.",
+                        icon: "info",
+                        draggable: true
+                    })
+                    return;
+                }
+                const payload = {
+                    subjectName: '<%- subject.subjectName %>',
+                    class: '<%= subject.class._id %>',
+                    teacher: '<%= subject.teacher._id %>',
+                    gradeDistribution: gradeDistribution,
+                    createdAt: '<%- subject.createdAt %>',
+                    updatedAt: new Date().toISOString()
+                }
+                sendData(this.action, payload);
+                closeDistributionModal();
+
+            })
+            document.getElementById('delete-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    }
+                });
+            })
+        </script>
+        <% if(action && action.includes('addedSubject')){ %>
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Subject added successfully"
+                });
+            </script>
+            <% } else if(action && action.includes('updatedSubject')){ %>
+                <script>
+                const Toast1 = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast1.fire({
+                    icon: "success",
+                    title: "Subject updated successfully"
+                });
+                </script>
+                <% } %>
+</body>
+
+</html>
