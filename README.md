@@ -10,8 +10,6 @@
 
 **A comprehensive, centralized platform automating academic administration and bridging the communication gap between schools and parents.**
 
-[View Demo](#) · [Report Bug](issues) · [Request Feature](issues)
-
 </div>
 
 ---
@@ -22,10 +20,8 @@
 - [System Architecture](#-system-architecture)
 - [Tech Stack](#-tech-stack)
 - [Security Implementation](#-security-implementation)
-- [Getting Started](#-getting-started)
 - [Screenshots](#-screenshots)
 - [Future Roadmap](#-future-roadmap)
-- [Contact](#-contact)
 
 ---
 
